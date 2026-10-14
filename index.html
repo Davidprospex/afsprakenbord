@@ -1,0 +1,450 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>Afsprakenbord Prospex</title>
+<style>
+/* ============================================================================
+   Prospex Design System v1.0 (2026-09-29)
+   Self-contained huisstijl voor alles wat Claude voor Prospex maakt: rapporten,
+   one-pagers, dashboards, panelen, landingspagina's. Logo zit ingebakken als SVG.
+   Gebruik: zet de VOLLEDIGE inhoud van dit bestand inline in een <style> in de
+   <head>, zet class="prospex" op de <body> (licht, voor documenten en print) of
+   class="prospex prospex-dark" (donker, de look van prospex.nl).
+   Herkomst van elke waarde: live site www.prospex.nl, uitgelezen 2026-09-29.
+   Fonts: koppen in Owners Wide (Adobe Fonts, via jullie eigen Adobe-licentie),
+   tekst in Zalando Sans (open licentie). Staat Owners Wide niet op de machine,
+   dan valt de kop terug op Zalando Sans Expanded (open licentie, Google Fonts).
+   ============================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,400;0,700;1,400&family=Zalando+Sans+Expanded:wght@400;700;900&display=swap');
+
+:root{
+  --prospex-oranje:#FF4A18;
+  --prospex-oranje-diep:#E43100;
+  --prospex-oranje-licht:#FF724B;
+  --prospex-oranje-tint:#FFE7DF;
+  --prospex-zwart:#000000;
+  --prospex-antraciet:#191919;
+  --prospex-antraciet-2:#222222;
+  --prospex-antraciet-3:#2F2F2F;
+  --prospex-wit:#FFFFFF;
+  --prospex-creme:#FDF0E1;
+  --prospex-perzik:#FAD8B1;
+  --prospex-inkt:#131313;
+  --prospex-grijs:#3F3F3F;
+  --prospex-grijs-licht:#AFAFAF;
+  --prospex-lijn:#E6E6E6;
+  --prospex-lijn-donker:#2F2F2F;
+  --prospex-status-goed:#00A6A6;
+  --prospex-status-aandacht:#F2C200;
+  --prospex-status-risico:#D4148C;
+  --prospex-font-kop:'Owners Wide','owners-wide','Zalando Sans Expanded','Arial Black',sans-serif;
+  --prospex-font-body:'Zalando Sans','Owners','owners',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --prospex-radius:15px;
+  --prospex-radius-groot:20px;
+  --prospex-radius-klein:5px;
+  --prospex-radius-pil:999px;
+  --prospex-schaduw:0 1px 2px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.08);
+  --prospex-gloed:0 12px 36px rgba(255,74,24,.28);
+}
+
+/* ---------- Basis (licht: documenten, rapporten, print) ---------- */
+body.prospex,.prospex{font-family:var(--prospex-font-body);color:var(--prospex-inkt);background:var(--prospex-wit);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+.prospex h1,.prospex h2,.prospex h3,.prospex h4{font-family:var(--prospex-font-kop);font-weight:400;line-height:1.15;letter-spacing:0;color:inherit;margin:1.4em 0 .5em;}
+.prospex h1{font-size:2.1rem;}
+.prospex h2{font-size:1.5rem;}
+.prospex h3{font-size:1.15rem;}
+.prospex h4{font-size:1rem;font-weight:700;}
+.prospex h1 em,.prospex h2 em,.prospex h3 em,.prospex .prospex-display em{color:var(--prospex-oranje);font-style:normal;}
+.prospex strong{font-weight:700;}
+.prospex a{color:var(--prospex-oranje-diep);text-underline-offset:2px;}
+.prospex code{font-family:ui-monospace,Menlo,monospace;font-size:.88em;background:var(--prospex-creme);padding:1px 5px;border-radius:var(--prospex-radius-klein);}
+.prospex hr{border:0;border-top:1px solid var(--prospex-lijn);margin:2rem 0;}
+
+/* ---------- Donker (de look van prospex.nl: panelen, dashboards, hero-pagina's) ---------- */
+.prospex-dark,body.prospex.prospex-dark{background:var(--prospex-antraciet);color:var(--prospex-wit);}
+.prospex-dark a{color:var(--prospex-oranje-licht);}
+.prospex-dark code{background:var(--prospex-antraciet-3);color:#fff;}
+.prospex-dark hr{border-top-color:var(--prospex-lijn-donker);}
+
+/* ---------- Logo (SVG ingebakken) ---------- */
+/* .prospex-logo = zwart woordmerk voor lichte achtergrond; .is-white = wit woordmerk voor donker.
+   De chevron (de X) is altijd oranje. Nooit het favicon als logo gebruiken. */
+.prospex-logo{display:inline-block;width:132px;height:24px;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzUuMjU1IDMwLjYwOSI+CjxnIGRhdGEtbmFtZT0iUHJvc3BleCBMb2dvIj4KPHBhdGggZGF0YS1uYW1lPSJVbmlvbiAxIiBkPSJNOTYuMTQ1IDMwLjYwOVYuNjMyaDQuMzI5djUuMUExMS4wNSAxMS4wNSAwIDAgMSAxMTAuNDg2LjE4NWM3LjAzNSAwIDEyLjEzMSA0LjgyNiAxMi4xMzEgMTIuNDQ3cy01LjE0MiAxMi41MjgtMTIuMTMxIDEyLjUyOGExMS4wNSAxMS4wNSAwIDAgMS0xMC4wMTItNS41NDhsLjA0NSAxMC45OTJabTQuMzc0LTE3LjkzNmMwIDUuNzI4IDMuNjUzIDkuMjkgOC45MjkgOS4yOSA1LjE4NyAwIDguNzk1LTMuNTE3IDguNzk1LTkuMjlzLTMuNjA4LTkuMjktOC43OTUtOS4yOWMtNS4yNzYgMC04LjkyOSAzLjUxNy04LjkyOSA5LjI5TTAgMzAuNjA5Vi42MzJoNC4zMjl2NS4xQTExLjA1IDExLjA1IDAgMCAxIDE0LjM0MS4xODVjNy4wMzUgMCAxMi4xMzEgNC44MjYgMTIuMTMxIDEyLjQ0N1MyMS4zMzEgMjUuMTYgMTQuMzQ1IDI1LjE2YTExLjA1IDExLjA1IDAgMCAxLTEwLjAxMi01LjU0OGwuMDQ1IDEwLjk5MlptNC4zNzQtMTcuOTM2YzAgNS43MjggMy42NTMgOS4yOSA4LjkzIDkuMjkgNS4xODYgMCA4Ljc5NC0zLjUxNyA4Ljc5NC05LjI5cy0zLjYwOC05LjI5LTguNzk0LTkuMjljLTUuMjc3IDAtOC45MyAzLjUxNy04LjkzIDkuMjltMTIwLjE4MSAwYzAtNy42MjEgNS41LTEyLjY3MyAxMi45ODktMTIuNjczIDcuMjE1IDAgMTIuODA3IDQuNzgxIDEyLjgwNyAxMi41ODN2LjYzMWgtMjEuNTU2Yy4yMjUgNS41NDcgMy43NDMgOC44ODQgOC43IDguODg0YTguMiA4LjIgMCAwIDAgOC4yMDctNmg0LjIzOWMtMS40NDMgNS42ODMtNi4xMzMgOS4yLTEyLjQ5MiA5LjItNy40ODMuMDAyLTEyLjg5NC00Ljg2OC0xMi44OTQtMTIuNjI1bTQuNDY1LTIuMzQ1aDE2Ljg2N2E4LjI1IDguMjUgMCAwIDAtOC40MzQtNy4xMjYgOC4zMiA4LjMyIDAgMCAwLTguNDM0IDcuMTI2Wm0tODYuNzY1IDIuMzQ1QzQyLjI1NSA0Ljg3MyA0Ny44MDMgMCA1NS40MjQgMGM3LjY2NiAwIDEzLjIxNCA0Ljg3MSAxMy4yMTQgMTIuNjczIDAgNy43NTctNS41NDggMTIuNjI3LTEzLjIxNCAxMi42MjdzLTEzLjE3LTQuODctMTMuMTctMTIuNjI3Wm00LjMzLS4wNDVjMCA1LjkwOCAzLjcgOS40MjYgOC44MzkgOS40MjZzOC44ODUtMy41MTggOC44ODUtOS4zODFjMC01LjkwOC0zLjc0NC05LjQyNi04Ljg4NS05LjQyNnMtOC44NCAzLjUxOC04Ljg0IDkuMzgxWm0yMy41ODUgMy41NjNoNC4xNDljLjk5MiA0LjA1OCAzLjg3OCA2IDguNTY4IDYgNC4zMyAwIDYuODEtMS41NzkgNi44MS0zLjk2OSAwLTIuODQxLTMuODc5LTMuNDI3LTguMTE4LTQuMDU4LTUuMTg2LS44MTMtMTAuOTU4LTEuNzU5LTEwLjk1OC03LjAzNSAwLTQuMDU5IDQuMDU4LTcuMDM1IDEwLjYtNy4wMzUgNi42NzQgMCAxMS4yNzQgMi45NzYgMTIuNTM3IDguNTIzaC00LjFjLTEuMDM3LTMuNy0zLjk2OC01LjQ1Ny04LjM4OC01LjQ1Ny00LjE0OCAwLTYuNDQ4IDEuNDg5LTYuNDQ4IDMuNjUzIDAgMi44IDMuOTY4IDMuMzgyIDguMyA0LjEgNS4xNDEuODU3IDEwLjc3NyAxLjg0OSAxMC43NzcgNi45IDAgNC4yODMtNC4yODQgNy40LTEwLjk1OCA3LjQtNi45MDktLjAwMy0xMS41OTYtMi45NzktMTIuNzcyLTkuMDIyWm05NS45ODkgMi4zMzUgMi45MjQtMi45MjUgNi4xNzEgNi4xNzF2Mi45MjFoLTIuOTI3Wk0yOC42ODIgMjQuNjY5Vi42MzJoNC4zNzV2NC41NTVBOS4zIDkuMyAwIDAgMSA0MS40NDQuMjcxYTUuNSA1LjUgMCAwIDEgLjg1OC4wNDV2My44NzlhMTAuMyAxMC4zIDAgMCAwLTEuNjctLjEzNSA4LjIyIDguMjIgMCAwIDAtNy41NzUgNC4zMjl2MTYuMjhaTTE2Ni4xNjkgNi44MjdsNi4xNi02LjE2aDIuOTI3djIuOTIybC02LjE2IDYuMTYxWiIgZmlsbD0iIzAwMCIvPgo8cGF0aCBkYXRhLW5hbWU9IlBhdGggNSIgZD0iTTE1NC4xMTIuNjY2aC0yLjkyNnYyLjkyMmw5LjA5MSA5LjA5MS05LjA5MSA5LjA5MXYyLjkyMmgyLjkyNmwxMi4wMTUtMTIuMDExWiIgZmlsbD0iI2ZmNGExOCIvPgo8L2c+Cjwvc3ZnPg==) no-repeat left center;background-size:contain;vertical-align:middle;}
+.prospex-logo.is-white,.prospex-dark .prospex-logo:not(.is-black){background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzUuMjU1IDMwLjYwOSI+CjxnIGRhdGEtbmFtZT0iUHJvc3BleCBMb2dvIj4KPHBhdGggZGF0YS1uYW1lPSJVbmlvbiAxIiBkPSJNOTYuMTQ1IDMwLjYwOVYuNjMyaDQuMzI5djUuMUExMS4wNSAxMS4wNSAwIDAgMSAxMTAuNDg2LjE4NWM3LjAzNSAwIDEyLjEzMSA0LjgyNiAxMi4xMzEgMTIuNDQ3cy01LjE0MiAxMi41MjgtMTIuMTMxIDEyLjUyOGExMS4wNSAxMS4wNSAwIDAgMS0xMC4wMTItNS41NDhsLjA0NSAxMC45OTJabTQuMzc0LTE3LjkzNmMwIDUuNzI4IDMuNjUzIDkuMjkgOC45MjkgOS4yOSA1LjE4NyAwIDguNzk1LTMuNTE3IDguNzk1LTkuMjlzLTMuNjA4LTkuMjktOC43OTUtOS4yOWMtNS4yNzYgMC04LjkyOSAzLjUxNy04LjkyOSA5LjI5TTAgMzAuNjA5Vi42MzJoNC4zMjl2NS4xQTExLjA1IDExLjA1IDAgMCAxIDE0LjM0MS4xODVjNy4wMzUgMCAxMi4xMzEgNC44MjYgMTIuMTMxIDEyLjQ0N1MyMS4zMzEgMjUuMTYgMTQuMzQ1IDI1LjE2YTExLjA1IDExLjA1IDAgMCAxLTEwLjAxMi01LjU0OGwuMDQ1IDEwLjk5MlptNC4zNzQtMTcuOTM2YzAgNS43MjggMy42NTMgOS4yOSA4LjkzIDkuMjkgNS4xODYgMCA4Ljc5NC0zLjUxNyA4Ljc5NC05LjI5cy0zLjYwOC05LjI5LTguNzk0LTkuMjljLTUuMjc3IDAtOC45MyAzLjUxNy04LjkzIDkuMjltMTIwLjE4MSAwYzAtNy42MjEgNS41LTEyLjY3MyAxMi45ODktMTIuNjczIDcuMjE1IDAgMTIuODA3IDQuNzgxIDEyLjgwNyAxMi41ODN2LjYzMWgtMjEuNTU2Yy4yMjUgNS41NDcgMy43NDMgOC44ODQgOC43IDguODg0YTguMiA4LjIgMCAwIDAgOC4yMDctNmg0LjIzOWMtMS40NDMgNS42ODMtNi4xMzMgOS4yLTEyLjQ5MiA5LjItNy40ODMuMDAyLTEyLjg5NC00Ljg2OC0xMi44OTQtMTIuNjI1bTQuNDY1LTIuMzQ1aDE2Ljg2N2E4LjI1IDguMjUgMCAwIDAtOC40MzQtNy4xMjYgOC4zMiA4LjMyIDAgMCAwLTguNDM0IDcuMTI2Wm0tODYuNzY1IDIuMzQ1QzQyLjI1NSA0Ljg3MyA0Ny44MDMgMCA1NS40MjQgMGM3LjY2NiAwIDEzLjIxNCA0Ljg3MSAxMy4yMTQgMTIuNjczIDAgNy43NTctNS41NDggMTIuNjI3LTEzLjIxNCAxMi42MjdzLTEzLjE3LTQuODctMTMuMTctMTIuNjI3Wm00LjMzLS4wNDVjMCA1LjkwOCAzLjcgOS40MjYgOC44MzkgOS40MjZzOC44ODUtMy41MTggOC44ODUtOS4zODFjMC01LjkwOC0zLjc0NC05LjQyNi04Ljg4NS05LjQyNnMtOC44NCAzLjUxOC04Ljg0IDkuMzgxWm0yMy41ODUgMy41NjNoNC4xNDljLjk5MiA0LjA1OCAzLjg3OCA2IDguNTY4IDYgNC4zMyAwIDYuODEtMS41NzkgNi44MS0zLjk2OSAwLTIuODQxLTMuODc5LTMuNDI3LTguMTE4LTQuMDU4LTUuMTg2LS44MTMtMTAuOTU4LTEuNzU5LTEwLjk1OC03LjAzNSAwLTQuMDU5IDQuMDU4LTcuMDM1IDEwLjYtNy4wMzUgNi42NzQgMCAxMS4yNzQgMi45NzYgMTIuNTM3IDguNTIzaC00LjFjLTEuMDM3LTMuNy0zLjk2OC01LjQ1Ny04LjM4OC01LjQ1Ny00LjE0OCAwLTYuNDQ4IDEuNDg5LTYuNDQ4IDMuNjUzIDAgMi44IDMuOTY4IDMuMzgyIDguMyA0LjEgNS4xNDEuODU3IDEwLjc3NyAxLjg0OSAxMC43NzcgNi45IDAgNC4yODMtNC4yODQgNy40LTEwLjk1OCA3LjQtNi45MDktLjAwMy0xMS41OTYtMi45NzktMTIuNzcyLTkuMDIyWm05NS45ODkgMi4zMzUgMi45MjQtMi45MjUgNi4xNzEgNi4xNzF2Mi45MjFoLTIuOTI3Wk0yOC42ODIgMjQuNjY5Vi42MzJoNC4zNzV2NC41NTVBOS4zIDkuMyAwIDAgMSA0MS40NDQuMjcxYTUuNSA1LjUgMCAwIDEgLjg1OC4wNDV2My44NzlhMTAuMyAxMC4zIDAgMCAwLTEuNjctLjEzNSA4LjIyIDguMjIgMCAwIDAtNy41NzUgNC4zMjl2MTYuMjhaTTE2Ni4xNjkgNi44MjdsNi4xNi02LjE2aDIuOTI3djIuOTIybC02LjE2IDYuMTYxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkYXRhLW5hbWU9IlBhdGggNSIgZD0iTTE1NC4xMTIuNjY2aC0yLjkyNnYyLjkyMmw5LjA5MSA5LjA5MS05LjA5MSA5LjA5MXYyLjkyMmgyLjkyNmwxMi4wMTUtMTIuMDExWiIgZmlsbD0iI2ZmNGExOCIvPgo8L2c+Cjwvc3ZnPg==);}
+.prospex-logo.is-large{width:220px;height:39px;}
+
+/* ---------- Header en footer ---------- */
+.prospex-header{display:flex;align-items:center;gap:18px;padding:18px 24px;background:var(--prospex-zwart);color:#fff;border-radius:var(--prospex-radius);}
+.prospex-header .prospex-logo{background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzUuMjU1IDMwLjYwOSI+CjxnIGRhdGEtbmFtZT0iUHJvc3BleCBMb2dvIj4KPHBhdGggZGF0YS1uYW1lPSJVbmlvbiAxIiBkPSJNOTYuMTQ1IDMwLjYwOVYuNjMyaDQuMzI5djUuMUExMS4wNSAxMS4wNSAwIDAgMSAxMTAuNDg2LjE4NWM3LjAzNSAwIDEyLjEzMSA0LjgyNiAxMi4xMzEgMTIuNDQ3cy01LjE0MiAxMi41MjgtMTIuMTMxIDEyLjUyOGExMS4wNSAxMS4wNSAwIDAgMS0xMC4wMTItNS41NDhsLjA0NSAxMC45OTJabTQuMzc0LTE3LjkzNmMwIDUuNzI4IDMuNjUzIDkuMjkgOC45MjkgOS4yOSA1LjE4NyAwIDguNzk1LTMuNTE3IDguNzk1LTkuMjlzLTMuNjA4LTkuMjktOC43OTUtOS4yOWMtNS4yNzYgMC04LjkyOSAzLjUxNy04LjkyOSA5LjI5TTAgMzAuNjA5Vi42MzJoNC4zMjl2NS4xQTExLjA1IDExLjA1IDAgMCAxIDE0LjM0MS4xODVjNy4wMzUgMCAxMi4xMzEgNC44MjYgMTIuMTMxIDEyLjQ0N1MyMS4zMzEgMjUuMTYgMTQuMzQ1IDI1LjE2YTExLjA1IDExLjA1IDAgMCAxLTEwLjAxMi01LjU0OGwuMDQ1IDEwLjk5MlptNC4zNzQtMTcuOTM2YzAgNS43MjggMy42NTMgOS4yOSA4LjkzIDkuMjkgNS4xODYgMCA4Ljc5NC0zLjUxNyA4Ljc5NC05LjI5cy0zLjYwOC05LjI5LTguNzk0LTkuMjljLTUuMjc3IDAtOC45MyAzLjUxNy04LjkzIDkuMjltMTIwLjE4MSAwYzAtNy42MjEgNS41LTEyLjY3MyAxMi45ODktMTIuNjczIDcuMjE1IDAgMTIuODA3IDQuNzgxIDEyLjgwNyAxMi41ODN2LjYzMWgtMjEuNTU2Yy4yMjUgNS41NDcgMy43NDMgOC44ODQgOC43IDguODg0YTguMiA4LjIgMCAwIDAgOC4yMDctNmg0LjIzOWMtMS40NDMgNS42ODMtNi4xMzMgOS4yLTEyLjQ5MiA5LjItNy40ODMuMDAyLTEyLjg5NC00Ljg2OC0xMi44OTQtMTIuNjI1bTQuNDY1LTIuMzQ1aDE2Ljg2N2E4LjI1IDguMjUgMCAwIDAtOC40MzQtNy4xMjYgOC4zMiA4LjMyIDAgMCAwLTguNDM0IDcuMTI2Wm0tODYuNzY1IDIuMzQ1QzQyLjI1NSA0Ljg3MyA0Ny44MDMgMCA1NS40MjQgMGM3LjY2NiAwIDEzLjIxNCA0Ljg3MSAxMy4yMTQgMTIuNjczIDAgNy43NTctNS41NDggMTIuNjI3LTEzLjIxNCAxMi42MjdzLTEzLjE3LTQuODctMTMuMTctMTIuNjI3Wm00LjMzLS4wNDVjMCA1LjkwOCAzLjcgOS40MjYgOC44MzkgOS40MjZzOC44ODUtMy41MTggOC44ODUtOS4zODFjMC01LjkwOC0zLjc0NC05LjQyNi04Ljg4NS05LjQyNnMtOC44NCAzLjUxOC04Ljg0IDkuMzgxWm0yMy41ODUgMy41NjNoNC4xNDljLjk5MiA0LjA1OCAzLjg3OCA2IDguNTY4IDYgNC4zMyAwIDYuODEtMS41NzkgNi44MS0zLjk2OSAwLTIuODQxLTMuODc5LTMuNDI3LTguMTE4LTQuMDU4LTUuMTg2LS44MTMtMTAuOTU4LTEuNzU5LTEwLjk1OC03LjAzNSAwLTQuMDU5IDQuMDU4LTcuMDM1IDEwLjYtNy4wMzUgNi42NzQgMCAxMS4yNzQgMi45NzYgMTIuNTM3IDguNTIzaC00LjFjLTEuMDM3LTMuNy0zLjk2OC01LjQ1Ny04LjM4OC01LjQ1Ny00LjE0OCAwLTYuNDQ4IDEuNDg5LTYuNDQ4IDMuNjUzIDAgMi44IDMuOTY4IDMuMzgyIDguMyA0LjEgNS4xNDEuODU3IDEwLjc3NyAxLjg0OSAxMC43NzcgNi45IDAgNC4yODMtNC4yODQgNy40LTEwLjk1OCA3LjQtNi45MDktLjAwMy0xMS41OTYtMi45NzktMTIuNzcyLTkuMDIyWm05NS45ODkgMi4zMzUgMi45MjQtMi45MjUgNi4xNzEgNi4xNzF2Mi45MjFoLTIuOTI3Wk0yOC42ODIgMjQuNjY5Vi42MzJoNC4zNzV2NC41NTVBOS4zIDkuMyAwIDAgMSA0MS40NDQuMjcxYTUuNSA1LjUgMCAwIDEgLjg1OC4wNDV2My44NzlhMTAuMyAxMC4zIDAgMCAwLTEuNjctLjEzNSA4LjIyIDguMjIgMCAwIDAtNy41NzUgNC4zMjl2MTYuMjhaTTE2Ni4xNjkgNi44MjdsNi4xNi02LjE2aDIuOTI3djIuOTIybC02LjE2IDYuMTYxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkYXRhLW5hbWU9IlBhdGggNSIgZD0iTTE1NC4xMTIuNjY2aC0yLjkyNnYyLjkyMmw5LjA5MSA5LjA5MS05LjA5MSA5LjA5MXYyLjkyMmgyLjkyNmwxMi4wMTUtMTIuMDExWiIgZmlsbD0iI2ZmNGExOCIvPgo8L2c+Cjwvc3ZnPg==);}
+.prospex-header .prospex-title{font-family:var(--prospex-font-kop);font-size:1.05rem;margin:0;color:#fff;padding-left:18px;border-left:1px solid var(--prospex-lijn-donker);}
+.prospex-header .prospex-meta{margin-left:auto;font-size:.82rem;color:var(--prospex-grijs-licht);text-align:right;}
+.prospex-footer{margin-top:36px;padding-top:12px;border-top:1px solid var(--prospex-lijn);font-size:.8rem;color:var(--prospex-grijs);display:flex;gap:12px;align-items:center;}
+.prospex-dark .prospex-footer{border-top-color:var(--prospex-lijn-donker);color:var(--prospex-grijs-licht);}
+
+/* ---------- Display, eyebrow, cijfers ---------- */
+.prospex .prospex-display{font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:clamp(2.2rem,5.5vw,4.4rem);line-height:1.02;margin:0 0 .35em;}
+.prospex-eyebrow{display:block;font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:.78rem;letter-spacing:.06em;color:var(--prospex-oranje);margin:0 0 .8rem;}
+.prospex-numeral{font-family:var(--prospex-font-kop);font-weight:700;font-size:clamp(2.4rem,6vw,4rem);line-height:1;color:var(--prospex-oranje);}
+.prospex-stat{display:flex;flex-direction:column;gap:6px;}
+.prospex-stat small{font-size:.9rem;color:inherit;opacity:.8;}
+
+/* ---------- Opsomming met de chevron uit het logo ---------- */
+.prospex ul.prospex-chevrons{list-style:none;padding-left:0;}
+.prospex ul.prospex-chevrons li{position:relative;padding-left:22px;margin:.4em 0;}
+.prospex ul.prospex-chevrons li::before{content:"";position:absolute;left:0;top:.38em;width:9px;height:14px;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjE1MSAwIDE2IDI1LjUiPjxwYXRoIGQ9Ik0xNTQuMTEyLjY2NmgtMi45MjZ2Mi45MjJsOS4wOTEgOS4wOTEtOS4wOTEgOS4wOTF2Mi45MjJoMi45MjZsMTIuMDE1LTEyLjAxMVoiIGZpbGw9IiNmZjRhMTgiLz48L3N2Zz4=) no-repeat center/contain;}
+
+/* ---------- Knoppen (pil) ---------- */
+.prospex-btn{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:.5em;font-family:var(--prospex-font-body);font-weight:700;font-size:.95rem;line-height:1;padding:14px 26px;border-radius:var(--prospex-radius-pil);border:1.5px solid transparent;cursor:pointer;text-decoration:none;transition:background .2s ease,color .2s ease,box-shadow .2s ease,transform .12s ease;}
+.prospex-btn:hover{transform:translateY(-1px);}
+.prospex-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.4);}
+.prospex-btn--primary{background:var(--prospex-oranje);color:#fff;}
+.prospex-btn--primary:hover{background:var(--prospex-oranje-diep);color:#fff;box-shadow:var(--prospex-gloed);}
+.prospex-btn--outline{background:transparent;color:var(--prospex-inkt);border-color:var(--prospex-inkt);}
+.prospex-btn--outline:hover{background:var(--prospex-inkt);color:#fff;}
+.prospex-dark .prospex-btn--outline{color:#fff;border-color:rgba(255,255,255,.7);}
+.prospex-dark .prospex-btn--outline:hover{background:#fff;color:var(--prospex-zwart);}
+.prospex-btn--ghost{background:transparent;color:var(--prospex-oranje-diep);}
+.prospex-btn--ghost:hover{background:var(--prospex-oranje-tint);}
+.prospex-btn[disabled],.prospex-btn.is-disabled{opacity:.45;pointer-events:none;}
+/* Knoppen als <a>: de linkkleur mag niet winnen. */
+.prospex a.prospex-btn{text-decoration:none;}
+.prospex a.prospex-btn--primary,.prospex a.prospex-btn--primary:hover,.prospex-btn--primary:hover{color:#fff;}
+.prospex a.prospex-btn--outline{color:var(--prospex-inkt);}
+.prospex a.prospex-btn--outline:hover{color:#fff;}
+.prospex a.prospex-btn--ghost{color:var(--prospex-oranje-diep);}
+.prospex.prospex-dark a.prospex-btn--outline,.prospex .prospex-dark a.prospex-btn--outline,.prospex .prospex-hero a.prospex-btn--outline,.prospex-hero .prospex-btn--outline,.prospex .prospex-header a.prospex-btn--outline{color:#fff;border-color:rgba(255,255,255,.7);}
+.prospex.prospex-dark a.prospex-btn--outline:hover,.prospex .prospex-dark a.prospex-btn--outline:hover,.prospex .prospex-hero a.prospex-btn--outline:hover,.prospex-hero .prospex-btn--outline:hover{background:#fff;color:var(--prospex-zwart);}
+.prospex-hero code,.prospex-card--dark code,.prospex-header code{background:var(--prospex-antraciet-3);color:#fff;}
+
+/* ---------- Badges ---------- */
+.prospex-badge{display:inline-block;background:var(--prospex-oranje);color:#fff;border-radius:var(--prospex-radius-pil);padding:3px 11px;font-size:.74rem;font-weight:700;line-height:1.4;}
+.prospex-badge--outline{background:transparent;color:var(--prospex-oranje-diep);border:1.5px solid var(--prospex-oranje);}
+.prospex-badge--soft{background:var(--prospex-creme);color:var(--prospex-inkt);}
+.prospex-badge--dark{background:var(--prospex-zwart);color:#fff;}
+/* Status: altijd met tekstlabel, nooit alleen kleur. Oranje is merk, geen status. */
+.prospex-status{display:inline-flex;align-items:center;gap:6px;border-radius:var(--prospex-radius-pil);padding:3px 11px;font-size:.74rem;font-weight:700;}
+.prospex-status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;}
+.prospex-status--goed{background:rgba(0,166,166,.14);color:#007A7A;}
+.prospex-status--aandacht{background:rgba(242,194,0,.22);color:#6B5500;}
+.prospex-status--risico{background:rgba(212,20,140,.13);color:#A00F69;}
+.prospex-status--optioneel{background:rgba(0,0,0,.07);color:var(--prospex-grijs);}
+.prospex-dark .prospex-status--goed{color:#3FD6D6;background:rgba(0,166,166,.22);}
+.prospex-dark .prospex-status--aandacht{color:#FFD83D;background:rgba(242,194,0,.18);}
+.prospex-dark .prospex-status--risico{color:#FF5CC0;background:rgba(212,20,140,.22);}
+.prospex-dark .prospex-status--optioneel{color:#CFCFCF;background:rgba(255,255,255,.1);}
+
+/* ---------- Kaarten ---------- */
+.prospex-card{box-sizing:border-box;position:relative;background:var(--prospex-wit);border:1px solid var(--prospex-lijn);border-radius:var(--prospex-radius);padding:26px;box-shadow:var(--prospex-schaduw);}
+.prospex-card--dark{background:var(--prospex-antraciet-2);border-color:var(--prospex-lijn-donker);color:#fff;box-shadow:none;}
+.prospex-dark .prospex-card:not(.prospex-card--featured):not(.prospex-card--light){background:var(--prospex-antraciet-2);border-color:var(--prospex-lijn-donker);color:#fff;box-shadow:none;}
+.prospex-card--featured{background:var(--prospex-oranje);border-color:transparent;color:#fff;box-shadow:var(--prospex-gloed);}
+.prospex-card--featured h1,.prospex-card--featured h2,.prospex-card--featured h3,.prospex-card--featured em{color:#fff;}
+.prospex-card--label{padding-top:52px;}
+.prospex-card--label .prospex-card-label{position:absolute;top:0;left:0;background:var(--prospex-oranje);color:#fff;font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:.85rem;padding:8px 18px;border-radius:var(--prospex-radius) 0 var(--prospex-radius-groot) 0;}
+
+/* ---------- Infopaneel ---------- */
+.prospex-panel{box-sizing:border-box;background:var(--prospex-creme);border-left:4px solid var(--prospex-oranje);border-radius:var(--prospex-radius-klein);padding:16px 20px;color:var(--prospex-inkt);}
+.prospex-dark .prospex-panel{background:var(--prospex-antraciet-3);color:#fff;}
+.prospex-panel .prospex-eyebrow{margin-bottom:.4rem;}
+
+/* ---------- Hero ---------- */
+.prospex-hero{box-sizing:border-box;position:relative;background:var(--prospex-zwart);color:#fff;padding:64px 44px;border-radius:var(--prospex-radius);overflow:hidden;}
+.prospex-hero h1,.prospex-hero .prospex-display{font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:clamp(2.2rem,5.5vw,4.4rem);line-height:1.02;color:#fff;margin:0 0 .35em;}
+.prospex-hero h1 em,.prospex-hero .prospex-display em{color:var(--prospex-oranje);font-style:normal;}
+.prospex-hero p{color:rgba(255,255,255,.78);max-width:56ch;}
+
+/* ---------- Tabellen ---------- */
+.prospex table{border-collapse:collapse;width:100%;font-size:.92rem;}
+.prospex th{background:var(--prospex-zwart);color:#fff;font-weight:700;text-align:left;padding:9px 12px;border-bottom:3px solid var(--prospex-oranje);}
+.prospex td{border-bottom:1px solid var(--prospex-lijn);padding:9px 12px;vertical-align:top;}
+.prospex tr:nth-child(even) td{background:#FAFAFA;}
+.prospex-dark td{border-bottom-color:var(--prospex-lijn-donker);}
+.prospex-dark tr:nth-child(even) td{background:rgba(255,255,255,.03);}
+
+/* ---------- Print ---------- */
+@media print{
+  .prospex{font-size:10.5pt;}
+  .prospex-card,.prospex-panel,.prospex-hero,table,tr{break-inside:avoid;}
+  .prospex h2,.prospex h3{break-after:avoid;}
+}
+
+</style>
+<style>
+/* Layout: zwarte kopbalk, weekstrook als navigatie, daaronder de gekozen week: totaal, per dag, per klant, lijst. */
+:root{
+  --bg:#191919; --vlak:#222222; --vlak-2:#2F2F2F; --lijn:#2F2F2F;
+  --tekst:#FFFFFF; --tekst-2:#BDBDBD; --tekst-3:#8A8A8A;
+  --accent:#FF4A18; --accent-zacht:rgba(255,74,24,.16);
+  --risico:#FF5CC0;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);}
+body{margin:0;}
+.wrap{box-sizing:border-box;max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:flex;flex-direction:column;gap:22px;}
+.prospex-header{flex-wrap:wrap;row-gap:8px;}
+.prospex-header .prospex-meta{font-variant-numeric:tabular-nums;}
+.eyebrow{font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:.72rem;letter-spacing:.07em;color:var(--tekst-3);margin:0;}
+
+/* Weekstrook */
+.weken{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;}
+.week{flex:0 0 auto;scroll-snap-align:end;box-sizing:border-box;min-width:112px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:12px 14px;border-radius:var(--prospex-radius);border:1px solid var(--lijn);background:var(--vlak);color:var(--tekst);font:inherit;text-align:left;cursor:pointer;transition:border-color .15s,background .15s;}
+.week:hover{border-color:var(--tekst-3);}
+.week:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.45);}
+.week .wk{font-family:var(--prospex-font-kop);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;}
+.week .wn{font-family:var(--prospex-font-kop);font-weight:700;font-size:1.6rem;line-height:1;font-variant-numeric:tabular-nums;}
+.week .wd{font-size:.75rem;color:var(--tekst-3);}
+.week[aria-current="true"]{background:var(--accent);border-color:var(--accent);}
+.week[aria-current="true"] .wd{color:rgba(255,255,255,.8);}
+.week .nu{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);}
+.week[aria-current="true"] .nu{color:#fff;}
+
+/* Kop van de gekozen week */
+.weekkop{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;}
+.weekkop h1{margin:0;font-size:clamp(1.5rem,3.4vw,2.2rem);text-wrap:balance;}
+.weekkop .sub{margin:.35rem 0 0;color:var(--tekst-2);font-size:.95rem;}
+.stats{display:flex;gap:28px;flex-wrap:wrap;}
+.stat{display:flex;flex-direction:column;gap:4px;}
+.stat b{font-family:var(--prospex-font-kop);font-weight:700;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1;font-variant-numeric:tabular-nums;}
+.stat b.oranje{color:var(--accent);}
+.stat span{font-size:.82rem;color:var(--tekst-2);}
+.nav{display:flex;gap:8px;}
+.nav button{font:inherit;font-weight:700;font-size:.85rem;color:var(--tekst);background:transparent;border:1.5px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;cursor:pointer;}
+.nav button:hover:not([disabled]){background:#fff;color:#000;}
+.nav button[disabled]{opacity:.35;cursor:default;}
+.nav button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.45);}
+
+/* Twee panelen */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr);}}
+.paneel{box-sizing:border-box;background:var(--vlak);border:1px solid var(--lijn);border-radius:var(--prospex-radius);padding:20px 22px;display:flex;flex-direction:column;gap:16px;min-width:0;}
+.paneel h2{margin:0;font-size:1.05rem;}
+
+/* Per werkdag: kolommen */
+.dagen{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:end;height:220px;padding-top:22px;}
+.dag{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%;cursor:default;}
+.dag .bar{width:min(46px,70%);background:var(--accent);border-radius:4px 4px 0 0;min-height:2px;transition:height .3s ease;}
+.dag .bar.leeg{background:var(--vlak-2);}
+.dag .n{font-family:var(--prospex-font-kop);font-weight:700;font-size:.95rem;font-variant-numeric:tabular-nums;}
+.dag .lbl{font-size:.78rem;color:var(--tekst-2);text-align:center;}
+.dag.vandaag .lbl{color:var(--tekst);font-weight:700;}
+.dag.toekomst .n{color:var(--tekst-3);}
+.as{border-top:1px solid var(--lijn);margin-top:-6px;}
+
+/* Per klant: horizontale balken */
+.klanten{display:flex;flex-direction:column;gap:9px;}
+.klant{display:grid;grid-template-columns:minmax(90px,160px) minmax(0,1fr) 2.2em;align-items:center;gap:12px;}
+.klant .naam{font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.klant .spoor{height:14px;}
+.klant .vul{height:100%;background:var(--accent);border-radius:0 4px 4px 0;min-width:3px;}
+.klant .aantal{font-family:var(--prospex-font-kop);font-weight:700;text-align:right;font-variant-numeric:tabular-nums;}
+
+/* Lijst */
+.lijst-wrap{overflow-x:auto;}
+.prospex .lijst{font-size:.9rem;}
+.prospex .lijst th{background:#000;}
+.prospex .lijst td{font-variant-numeric:tabular-nums;}
+.prospex-dark .lijst tr:nth-child(even) td{background:rgba(255,255,255,.03);}
+.afgekeurd td{color:var(--tekst-3);}
+.afgekeurd td.k{text-decoration:line-through;}
+.chip{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap;}
+.chip.telt{background:rgba(0,166,166,.22);color:#3FD6D6;}
+.chip.af{background:rgba(212,20,140,.22);color:var(--risico);}
+
+.leeg-staat{color:var(--tekst-2);font-size:.95rem;margin:0;}
+.tip{position:fixed;pointer-events:none;background:#000;color:#fff;border:1px solid var(--lijn);border-radius:8px;padding:8px 10px;font-size:.8rem;line-height:1.4;max-width:240px;z-index:10;}
+.prospex-footer{margin-top:4px;}
+@media (prefers-reduced-motion:reduce){.dag .bar{transition:none;}}
+</style>
+
+</head><body><div class="prospex prospex-dark">
+<div class="wrap">
+  <header class="prospex-header">
+    <span class="prospex-logo"></span>
+    <p class="prospex-title">Afsprakenbord</p>
+    <div class="prospex-meta" id="meta">&nbsp;</div>
+  </header>
+
+  <section aria-label="Weken">
+    <p class="eyebrow" style="margin-bottom:10px">Alle weken, klik om te openen</p>
+    <div class="weken" id="weken"></div>
+  </section>
+
+  <section class="weekkop">
+    <div>
+      <span class="prospex-eyebrow" id="wk-eyebrow">Deze week</span>
+      <h1 id="wk-titel">Nieuwe <em>afspraken</em></h1>
+      <p class="sub" id="wk-sub">&nbsp;</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b class="oranje" id="st-week">0</b><span>deze week</span></div>
+      <div class="stat"><b id="st-vandaag">0</b><span id="st-vandaag-l">vandaag</span></div>
+      <div class="stat"><b id="st-vorige">0</b><span>week ervoor</span></div>
+    </div>
+    <div class="nav">
+      <button type="button" id="vorige">‹ Vorige week</button>
+      <button type="button" id="volgende">Volgende week ›</button>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="paneel">
+      <h2>Per <em>werkdag</em></h2>
+      <div class="dagen" id="dagen"></div>
+      <div class="as"></div>
+    </section>
+    <section class="paneel">
+      <h2>Per <em>klant</em></h2>
+      <div class="klanten" id="klanten"></div>
+    </section>
+  </div>
+
+  <section class="paneel">
+    <h2>Alle afspraken <em>deze week</em></h2>
+    <div class="lijst-wrap">
+      <table class="lijst">
+        <thead><tr><th>Dag</th><th>Tijd</th><th>Klant</th><th>Nummer</th><th>Status</th></tr></thead>
+        <tbody id="lijst"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="prospex-footer">
+    <span>Bron: WhatsApp-groep Prospex call 2026. Telt alleen nieuwe afspraken, herplanners niet. Afgekeurde afspraken staan doorgestreept en tellen niet mee. Ververst elke werkdag om 09:00, 10:30, 12:00, 13:30, 15:00 en 17:30.</span>
+  </footer>
+</div>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const DAGNAAM=["ma","di","wo","do","vr"];
+const MAAND=["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
+let dagDocs={};       // datum -> [afspraken], gevuld uit DATA onderaan
+let meta=null;
+let gekozen=null;     // maandag (YYYY-MM-DD) van gekozen week
+
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);};
+const maandag=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x;};
+const plus=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+function weeknr(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const dn=(t.getUTCDay()+6)%7;t.setUTCDate(t.getUTCDate()-dn+3);const j=new Date(Date.UTC(t.getUTCFullYear(),0,4));return 1+Math.round(((t-j)/864e5-3+((j.getUTCDay()+6)%7))/7);}
+const kort=d=>d.getDate()+" "+MAAND[d.getMonth()];
+const telt=a=>a.status!=="afgekeurd";
+const vandaag=()=>iso(new Date());
+const huidigeMa=()=>iso(maandag(new Date()));
+
+function afsprakenVanWeek(ma){
+  const out=[];const m=parse(ma);
+  for(let i=0;i<5;i++){const ds=iso(plus(m,i));(dagDocs[ds]||[]).forEach(a=>out.push({...a,datum:ds}));}
+  return out;
+}
+function alleWeken(){
+  const set=new Set([huidigeMa()]);
+  Object.keys(dagDocs).forEach(ds=>set.add(iso(maandag(parse(ds)))));
+  return [...set].sort();
+}
+
+function renderWeken(){
+  const el=document.getElementById("weken");el.innerHTML="";
+  const weken=alleWeken();const nu=huidigeMa();
+  weken.forEach(ma=>{
+    const m=parse(ma);const n=afsprakenVanWeek(ma).filter(telt).length;
+    const b=document.createElement("button");b.type="button";b.className="week";
+    b.setAttribute("aria-current",ma===gekozen?"true":"false");
+    b.innerHTML=`<span class="wk">Week ${weeknr(m)}</span><span class="wn">${n}</span><span class="wd">${kort(m)} – ${kort(plus(m,4))}</span>`+(ma===nu?`<span class="nu">Lopend</span>`:"");
+    b.addEventListener("click",()=>kies(ma));
+    el.appendChild(b);
+  });
+  const act=el.querySelector('[aria-current="true"]');
+  if(act) act.scrollIntoView({block:"nearest",inline:"nearest"});
+}
+
+function renderWeek(){
+  const m=parse(gekozen);const nu=huidigeMa();const isNu=gekozen===nu;
+  const items=afsprakenVanWeek(gekozen);const geteld=items.filter(telt);
+  const vorige=afsprakenVanWeek(iso(plus(m,-7))).filter(telt).length;
+  document.getElementById("wk-eyebrow").textContent=isNu?"Deze week, lopend":"Afgesloten week";
+  document.getElementById("wk-titel").innerHTML=`Week ${weeknr(m)}: <em>${geteld.length}</em> ${geteld.length===1?"afspraak":"afspraken"}`;
+  document.getElementById("wk-sub").textContent=`${kort(m)} t/m ${kort(plus(m,4))} ${plus(m,4).getFullYear()}`;
+  document.getElementById("st-week").textContent=geteld.length;
+  document.getElementById("st-week").nextElementSibling.textContent=isNu?"deze week":"in week "+weeknr(m);
+  const vd=vandaag();const vdN=(dagDocs[vd]||[]).filter(telt).length;
+  const stV=document.getElementById("st-vandaag");
+  if(isNu){stV.textContent=vdN;document.getElementById("st-vandaag-l").textContent="vandaag";stV.parentElement.hidden=false;}
+  else{stV.parentElement.hidden=true;}
+  document.getElementById("st-vorige").textContent=vorige;
+  document.getElementById("vorige").disabled=gekozen<=alleWeken()[0];
+  document.getElementById("volgende").disabled=gekozen>=nu;
+  document.querySelector(".paneel:last-of-type h2, section.paneel h2");
+
+  // per werkdag
+  const dEl=document.getElementById("dagen");dEl.innerHTML="";
+  const perDag=[0,1,2,3,4].map(i=>{const ds=iso(plus(m,i));return {ds,lijst:(dagDocs[ds]||[]).filter(telt)};});
+  const max=Math.max(4,...perDag.map(d=>d.lijst.length));
+  perDag.forEach((d,i)=>{
+    const dm=parse(d.ds);const toek=d.ds>vd;
+    const div=document.createElement("div");div.className="dag"+(d.ds===vd?" vandaag":"")+(toek?" toekomst":"");
+    const h=d.lijst.length?Math.max(4,d.lijst.length/max*150):2;
+    div.innerHTML=`<span class="n">${toek?"–":d.lijst.length}</span><div class="bar${d.lijst.length?"":" leeg"}" style="height:${h}px"></div><span class="lbl">${DAGNAAM[i]} ${dm.getDate()}</span>`;
+    const tel={};d.lijst.forEach(a=>tel[a.klant]=(tel[a.klant]||0)+1);
+    const tipTekst=d.lijst.length?`<b>${DAGNAAM[i]} ${kort(dm)}: ${d.lijst.length}</b><br>`+Object.entries(tel).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${esc(k)} ${n}`).join("<br>"):`${DAGNAAM[i]} ${kort(dm)}: ${toek?"nog niet":"geen afspraken"}`;
+    tip(div,tipTekst);
+    dEl.appendChild(div);
+  });
+
+  // per klant
+  const kEl=document.getElementById("klanten");kEl.innerHTML="";
+  const tel={};geteld.forEach(a=>tel[a.klant]=(tel[a.klant]||0)+1);
+  const rij=Object.entries(tel).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  if(!rij.length){kEl.innerHTML=`<p class="leeg-staat">${isNu?"Nog geen nieuwe afspraken deze week. Zodra er een in de groep staat, verschijnt hij hier bij de volgende verversing.":"Geen afspraken in deze week."}</p>`;}
+  const kmax=rij.length?rij[0][1]:1;
+  rij.forEach(([k,n])=>{
+    const r=document.createElement("div");r.className="klant";
+    r.innerHTML=`<span class="naam" title="${esc(k)}">${esc(k)}</span><div class="spoor"><div class="vul" style="width:${n/kmax*100}%"></div></div><span class="aantal">${n}</span>`;
+    tip(r,`<b>${esc(k)}</b><br>${n} ${n===1?"afspraak":"afspraken"} in week ${weeknr(m)}`);
+    kEl.appendChild(r);
+  });
+
+  // lijst
+  document.querySelector("section.paneel:not(.grid section) h2, #lijst").closest("section").querySelector("h2").innerHTML=isNu?"Alle afspraken <em>deze week</em>":`Alle afspraken <em>week ${weeknr(m)}</em>`;
+  const tb=document.getElementById("lijst");tb.innerHTML="";
+  const sorted=[...items].sort((a,b)=>(b.datum+b.tijd).localeCompare(a.datum+a.tijd));
+  if(!sorted.length){tb.innerHTML=`<tr><td colspan="5" class="leeg-staat">Nog niets in deze week.</td></tr>`;}
+  sorted.forEach(a=>{
+    const d=parse(a.datum);const tr=document.createElement("tr");
+    if(!telt(a)) tr.className="afgekeurd";
+    tr.innerHTML=`<td>${DAGNAAM[(d.getDay()+6)%7]} ${kort(d)}</td><td>${esc(a.tijd||"")}</td><td class="k">${esc(a.klant)}</td><td>${esc(a.nummer||"")}</td><td>${telt(a)?'<span class="chip telt">Telt</span>':'<span class="chip af">Afgekeurd</span>'+(a.reden?` <span style="color:var(--tekst-3)">${esc(a.reden)}</span>`:"")}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+const tipEl=document.getElementById("tip");
+function tip(el,html){
+  el.addEventListener("mousemove",e=>{tipEl.innerHTML=html;tipEl.hidden=false;const x=Math.min(e.clientX+14,window.innerWidth-tipEl.offsetWidth-8);tipEl.style.left=x+"px";tipEl.style.top=(e.clientY+14)+"px";});
+  el.addEventListener("mouseleave",()=>{tipEl.hidden=true;});
+}
+
+function kies(ma){
+  gekozen=ma;
+  try{history.replaceState(null,"","#w"+ma.replace(/-/g,""));}catch(e){}
+  renderWeken();renderWeek();
+}
+document.getElementById("vorige").addEventListener("click",()=>{const w=alleWeken();const i=w.indexOf(gekozen);if(i>0)kies(w[i-1]);});
+document.getElementById("volgende").addEventListener("click",()=>{const w=alleWeken();const i=w.indexOf(gekozen);if(i<w.length-1)kies(w[i+1]);});
+
+function renderMeta(){
+  const el=document.getElementById("meta");
+  if(meta&&meta.laatsteRun){const [d,t]=meta.laatsteRun.split("T");el.textContent="Bijgewerkt "+kort(parse(d))+" om "+(t||"").slice(0,5);}
+  else el.textContent="Nog niet bijgewerkt";
+}
+
+function startWeek(){
+  const h=(location.hash||"").match(/^#w(\d{4})(\d{2})(\d{2})$/);
+  return h?`${h[1]}-${h[2]}-${h[3]}`:huidigeMa();
+}
+gekozen=startWeek();
+renderWeken();renderWeek();renderMeta();
+
+const DATA={"laatsteRun": "2026-10-14T15:35", "dagen": {"2026-10-05": [{"id": "112352", "tijd": "10:13", "klant": "Axelio", "nummer": "284", "status": "telt"}, {"id": "112374", "tijd": "11:23", "klant": "Nowy Styl", "nummer": "2250", "status": "telt"}, {"id": "112369", "tijd": "12:39", "klant": "Mfactor", "nummer": "145", "status": "telt"}, {"id": "112412", "tijd": "13:08", "klant": "Mfactor", "nummer": "142", "status": "telt"}, {"id": "112435", "tijd": "13:34", "klant": "Prostrive", "nummer": "955", "status": "telt"}, {"id": "112400", "tijd": "16:20", "klant": "OnItNow", "nummer": "174", "status": "telt"}], "2026-10-06": [{"id": "112354", "tijd": "10:17", "klant": "Riff", "nummer": "1307", "status": "telt"}, {"id": "112420", "tijd": "11:50", "klant": "Prostrive", "nummer": "956", "status": "telt"}, {"id": "112341", "tijd": "13:01", "klant": "Riff", "nummer": "1143", "status": "telt"}, {"id": "112362", "tijd": "14:07", "klant": "RBBLS", "nummer": "215", "status": "telt"}, {"id": "112385", "tijd": "15:27", "klant": "Hovingh", "nummer": "466", "status": "telt"}, {"id": "112408-1", "tijd": "18:16", "klant": "Touch", "nummer": "2016", "status": "telt"}, {"id": "112408-2", "tijd": "18:16", "klant": "Touch", "nummer": "2022", "status": "telt"}, {"id": "112408-3", "tijd": "18:16", "klant": "Touch", "nummer": "1260", "status": "telt"}], "2026-10-07": [{"id": "112429", "tijd": "14:17", "klant": "Mfactor", "nummer": "149", "status": "telt"}, {"id": "112372-1", "tijd": "15:10", "klant": "Nowy Styl", "nummer": "2757", "status": "telt"}, {"id": "112372-2", "tijd": "15:10", "klant": "Prostrive", "nummer": "770", "status": "telt"}, {"id": "112394", "tijd": "15:19", "klant": "Mfactor", "nummer": "151", "status": "telt"}, {"id": "112415", "tijd": "15:48", "klant": "Mfactor", "nummer": "152", "status": "telt"}, {"id": "112358", "tijd": "16:43", "klant": "QRC", "nummer": "693", "status": "telt"}, {"id": "112381", "tijd": "18:34", "klant": "Prospex", "nummer": "2785", "status": "telt"}], "2026-10-08": [{"id": "112403", "tijd": "10:05", "klant": "Personeelsadviseur", "nummer": "752", "status": "telt"}, {"id": "112424", "tijd": "10:35", "klant": "Lyreco", "nummer": "515", "status": "telt"}, {"id": "112345", "tijd": "15:28", "klant": "Prospex", "nummer": "2786", "status": "telt"}, {"id": "112390", "tijd": "17:00", "klant": "Marcus", "nummer": "1458", "status": "telt"}, {"id": "112419", "tijd": "17:07", "klant": "Marcus", "nummer": "1459", "status": "telt"}, {"id": "112434", "tijd": "17:21", "klant": "Solite", "nummer": "320", "status": "telt"}], "2026-10-09": [{"id": "112377", "tijd": "10:53", "klant": "Novar", "nummer": "549", "status": "telt"}, {"id": "112399", "tijd": "11:05", "klant": "Axelio", "nummer": "297", "status": "telt"}, {"id": "112421", "tijd": "13:54", "klant": "Touch", "nummer": "1985", "status": "telt"}, {"id": "112342", "tijd": "13:54", "klant": "Lyreco", "nummer": "401", "status": "telt"}, {"id": "112363", "tijd": "14:22", "klant": "OnItNow", "nummer": "493", "status": "telt"}, {"id": "112386", "tijd": "15:04", "klant": "Marcus", "nummer": "1460", "status": "telt"}, {"id": "112409", "tijd": "16:02", "klant": "Novar", "nummer": "546", "status": "telt"}], "2026-10-12": [{"id": "112395", "tijd": "09:14", "klant": "Verdi", "nummer": "954", "status": "telt"}, {"id": "112416", "tijd": "11:14", "klant": "Mfactor", "nummer": "1151", "status": "telt"}, {"id": "112438", "tijd": "11:44", "klant": "Hovingh", "nummer": "460", "status": "telt"}, {"id": "112359", "tijd": "11:45", "klant": "Marcus", "nummer": "1461", "status": "telt"}, {"id": "112382", "tijd": "12:09", "klant": "Mfactor", "nummer": "144", "status": "telt"}, {"id": "112404", "tijd": "12:32", "klant": "Mfactor", "nummer": "1152", "status": "telt"}, {"id": "112425", "tijd": "17:02", "klant": "Prospex", "nummer": "693", "status": "telt"}, {"id": "112346", "tijd": "17:11", "klant": "Prospex", "nummer": "712", "status": "telt"}], "2026-10-13": [{"id": "112368", "tijd": "09:28", "klant": "Thorlux", "nummer": "2577", "status": "telt"}, {"id": "112407", "tijd": "11:44", "klant": "Lyreco", "nummer": "435", "status": "telt"}, {"id": "112428", "tijd": "12:00", "klant": "Novar", "nummer": "372", "status": "telt"}, {"id": "112349", "tijd": "12:12", "klant": "Prospex", "nummer": "2787", "status": "telt"}, {"id": "112371", "tijd": "12:21", "klant": "Lyreco", "nummer": "412", "status": "telt"}, {"id": "112393", "tijd": "12:31", "klant": "Marcus", "nummer": "1462", "status": "telt"}, {"id": "112344", "tijd": "16:36", "klant": "Marcus", "nummer": "1463", "status": "telt"}, {"id": "112366", "tijd": "16:37", "klant": "Prospex", "nummer": "2788", "status": "telt"}]}};
+dagDocs=DATA.dagen||{};meta={laatsteRun:DATA.laatsteRun};
+renderWeken();renderWeek();renderMeta();
+</script>
+</body></html>
