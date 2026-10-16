@@ -30,6 +30,30 @@ html,body{background:var(--bg);}
 .wk-kol.nu .bar{background:#FF8A66;}
 .wk-kol:hover .bar{filter:brightness(1.15);}
 .wk-kol .lbl{font-size:.62rem;color:var(--tekst-3);font-variant-numeric:tabular-nums;}
+.maandchart{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(36px,1fr);gap:10px;align-items:end;height:220px;padding-top:22px;overflow-x:auto;}
+.m-kol{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%;cursor:pointer;min-width:36px;}
+.m-kol .bar{width:70%;background:var(--vlak-2);border-radius:4px 4px 0 0;min-height:2px;}
+.m-kol.sel .bar{background:var(--accent);}
+.m-kol:hover .bar{filter:brightness(1.25);}
+.m-kol .n{font-family:var(--prospex-font-kop);font-weight:700;font-size:.85rem;font-variant-numeric:tabular-nums;}
+.m-kol .lbl{font-size:.75rem;color:var(--tekst-2);}
+.m-kol.sel .lbl{color:var(--tekst);font-weight:700;}
+.paneelkop{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;}
+.legenda{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--tekst-2);}
+.legenda span{display:inline-flex;align-items:center;gap:6px;}
+.legenda i{width:12px;height:12px;border-radius:3px;display:inline-block;}
+.lijnchart svg{width:100%;height:auto;display:block;}
+.vergelijk{display:flex;flex-direction:column;gap:10px;}
+.vg{display:grid;grid-template-columns:minmax(90px,160px) minmax(0,1fr) 4.5em;align-items:center;gap:12px;}
+.vg .naam{font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vg .sporen{display:flex;flex-direction:column;gap:3px;}
+.vg .s1,.vg .s2{height:10px;border-radius:0 3px 3px 0;min-width:2px;}
+.vg .s1{background:var(--accent);}
+.vg .s2{background:#7A7A7A;}
+.vg .cijfers{font-variant-numeric:tabular-nums;text-align:right;font-size:.82rem;line-height:1.25;}
+.vg .cijfers b{font-family:var(--prospex-font-kop);font-size:.95rem;}
+.vg .cijfers span{color:var(--tekst-3);display:block;}
+.plus{color:#3FD6D6;} .min{color:#FF5CC0;}
 .meer{align-self:flex-start;font:inherit;font-size:.82rem;font-weight:700;color:var(--tekst);background:transparent;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;cursor:pointer;}
 .meer:hover{background:#fff;color:#000;}
 body{margin:0;}
@@ -119,6 +143,7 @@ body{margin:0;}
 
   <div class="tabs" role="tablist" aria-label="Weergave">
     <button type="button" role="tab" id="tab-week" aria-selected="true">Per week</button>
+    <button type="button" role="tab" id="tab-maand" aria-selected="false">Per maand</button>
     <button type="button" role="tab" id="tab-totaal" aria-selected="false">Totaal</button>
   </div>
 
@@ -157,21 +182,51 @@ body{margin:0;}
     </section>
   </div>
 
-  <section class="paneel">
-    <h2>Per <em>profiel</em></h2>
-    <div class="klanten" id="profielen"></div>
-  </section>
 
   <section class="paneel">
     <h2 id="lijst-kop">Alle afspraken <em>deze week</em></h2>
     <div class="lijst-wrap">
       <table class="lijst">
-        <thead><tr><th>Gemaakt</th><th>Tijd</th><th>Klant</th><th>Profiel</th><th>Ctpid</th></tr></thead>
+        <thead><tr><th>Gemaakt</th><th>Tijd</th><th>Klant</th><th>Ctpid</th></tr></thead>
         <tbody id="lijst"></tbody>
       </table>
     </div>
   </section>
 
+  </div>
+
+  <div id="view-maand" class="views" hidden>
+    <section aria-label="Maanden">
+      <p class="eyebrow" style="margin-bottom:10px">Alle maanden, klik om te openen</p>
+      <div class="weken" id="maanden"></div>
+    </section>
+    <section class="weekkop">
+      <div>
+        <span class="prospex-eyebrow" id="m-eyebrow">Deze maand</span>
+        <h1 id="m-titel">Maand</h1>
+        <p class="sub" id="m-sub">&nbsp;</p>
+      </div>
+    </section>
+    <div class="kpis">
+      <div class="kpi"><b class="oranje" id="mk-tot">0</b><span id="mk-tot-l">afspraken</span></div>
+      <div class="kpi"><b id="mk-delta">0</b><span id="mk-delta-l">tegenover vorige maand</span></div>
+      <div class="kpi"><b id="mk-dag">0</b><span>gemiddeld per werkdag</span></div>
+      <div class="kpi"><b id="mk-klant" style="font-size:clamp(1.2rem,2.6vw,1.6rem)">-</b><span id="mk-klant-l">meeste afspraken</span></div>
+    </div>
+    <section class="paneel">
+      <h2>Per <em>maand</em></h2>
+      <div class="maandchart" id="maandchart"></div>
+    </section>
+    <section class="paneel">
+      <div class="paneelkop"><h2>Opbouw <em>door de maand</em></h2><div class="legenda" id="lijn-legenda"></div></div>
+      <div id="lijnchart" class="lijnchart"></div>
+      <p class="leeg-staat" style="font-size:.82rem">Opgeteld per dag. Zo zie je of je voor of achter loopt op vorige maand.</p>
+    </section>
+    <section class="paneel">
+      <div class="paneelkop"><h2>Per klant, <em>vergeleken</em></h2><div class="legenda" id="klant-legenda"></div></div>
+      <div class="vergelijk" id="vergelijk"></div>
+      <button type="button" class="meer" id="meer-vergelijk" hidden>Toon alle klanten</button>
+    </section>
   </div>
 
   <div id="view-totaal" class="views" hidden>
@@ -193,18 +248,11 @@ body{margin:0;}
       <div class="wekenchart-wrap"><div class="wekenchart" id="wekenchart"></div></div>
       <p class="leeg-staat" style="font-size:.82rem">Klik op een week om die te openen.</p>
     </section>
-    <div class="grid">
-      <section class="paneel">
-        <h2>Per <em>klant</em></h2>
-        <div class="klanten" id="tot-klanten"></div>
-        <button type="button" class="meer" id="meer-klanten" hidden>Toon alle klanten</button>
-      </section>
-      <section class="paneel">
-        <h2>Per <em>profiel</em></h2>
-        <div class="klanten" id="tot-profielen"></div>
-        <button type="button" class="meer" id="meer-profielen" hidden>Toon alle profielen</button>
-      </section>
-    </div>
+    <section class="paneel">
+      <h2>Per <em>klant</em></h2>
+      <div class="klanten" id="tot-klanten"></div>
+      <button type="button" class="meer" id="meer-klanten" hidden>Toon alle klanten</button>
+    </section>
   </div>
 
   <footer class="prospex-footer">
@@ -304,28 +352,15 @@ function renderWeek(){
     kEl.appendChild(r);
   });
 
-  // per profiel
-  const pEl=document.getElementById("profielen");pEl.innerHTML="";
-  const ptel={};geteld.forEach(a=>{const k=a.profiel||"Onbekend";ptel[k]=(ptel[k]||0)+1;});
-  const prij=Object.entries(ptel).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
-  if(!prij.length){pEl.innerHTML=`<p class="leeg-staat">${isNu?"Nog geen afspraken deze week.":"Geen afspraken in deze week."}</p>`;}
-  const pmax=prij.length?prij[0][1]:1;
-  prij.forEach(([k,n])=>{
-    const r=document.createElement("div");r.className="klant";
-    r.innerHTML=`<span class="naam" title="${esc(k)}">${esc(k)}</span><div class="spoor"><div class="vul" style="width:${n/pmax*100}%"></div></div><span class="aantal">${n}</span>`;
-    tip(r,`<b>${esc(k)}</b><br>${n} ${n===1?"afspraak":"afspraken"} in week ${weeknr(m)}`);
-    pEl.appendChild(r);
-  });
-
   // lijst
   document.getElementById("lijst-kop").innerHTML=isNu?"Alle afspraken <em>deze week</em>":`Alle afspraken <em>week ${weeknr(m)}</em>`;
   const tb=document.getElementById("lijst");tb.innerHTML="";
   const sorted=[...items].sort((a,b)=>(b.datum+b.tijd).localeCompare(a.datum+a.tijd));
-  if(!sorted.length){tb.innerHTML=`<tr><td colspan="5" class="leeg-staat">Nog niets in deze week.</td></tr>`;}
+  if(!sorted.length){tb.innerHTML=`<tr><td colspan="4" class="leeg-staat">Nog niets in deze week.</td></tr>`;}
   sorted.forEach(a=>{
     const d=parse(a.datum);const tr=document.createElement("tr");
     if(!telt(a)) tr.className="afgekeurd";
-    tr.innerHTML=`<td>${DAGNAAM[(d.getDay()+6)%7]} ${kort(d)}</td><td>${esc(a.tijd||"")}</td><td class="k">${esc(a.klant)}</td><td>${esc(a.profiel||"")}</td><td>${esc(a.nummer||"")}</td>`;
+    tr.innerHTML=`<td>${DAGNAAM[(d.getDay()+6)%7]} ${kort(d)}</td><td>${esc(a.tijd||"")}</td><td class="k">${esc(a.klant)}</td><td>${esc(a.nummer||"")}</td>`;
     tb.appendChild(tr);
   });
 }
@@ -362,6 +397,78 @@ const DATA=/*DATA*/;
 dagDocs=DATA.dagen||{};meta={laatsteRun:DATA.laatsteRun};
 renderWeken();renderWeek();renderMeta();
 
+
+// ---------- Per maand ----------
+const MNAAM=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+const MKORT=["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
+let gekozenMaand=null,toonAlleV=false;
+function perMaand(){const m={};Object.entries(dagDocs).forEach(([d,v])=>{const k=d.slice(0,7);v.forEach(a=>{if(telt(a))(m[k]=m[k]||[]).push({...a,datum:d});});});return m;}
+function alleMaanden(){const ks=Object.keys(dagDocs).map(d=>d.slice(0,7));const nu=iso(new Date()).slice(0,7);ks.push(nu);const s=[...new Set(ks)].sort();const out=[];if(!s.length)return out;let [y,m]=s[0].split("-").map(Number);const [ey,em]=nu.split("-").map(Number);while(y<ey||(y===ey&&m<=em)){out.push(y+"-"+pad(m));m++;if(m>12){m=1;y++;}}return out;}
+const vorigeMaand=k=>{let [y,m]=k.split("-").map(Number);m--;if(!m){m=12;y--;}return y+"-"+pad(m);};
+const mLabel=k=>{const [y,m]=k.split("-").map(Number);return MNAAM[m-1]+" "+y;};
+function werkdagen(k,totDag){const [y,m]=k.split("-").map(Number);let n=0;const d=new Date(y,m-1,1);while(d.getMonth()===m-1&&(!totDag||d<=totDag)){if(d.getDay()%6)n++;d.setDate(d.getDate()+1);}return n;}
+function renderMaand(){
+  const pm=perMaand();const ms=alleMaanden();const nu=iso(new Date()).slice(0,7);
+  if(!gekozenMaand||!ms.includes(gekozenMaand))gekozenMaand=nu;
+  const k=gekozenMaand,v=vorigeMaand(k);const cur=pm[k]||[],prev=pm[v]||[];const isNu=k===nu;
+  // maandstrook
+  const strook=document.getElementById("maanden");strook.innerHTML="";
+  ms.forEach(mk=>{const b=document.createElement("button");b.type="button";b.className="week";b.setAttribute("aria-current",mk===k?"true":"false");
+    const [y,m]=mk.split("-").map(Number);
+    b.innerHTML=`<span class="wk">${MKORT[m-1]} ${y}</span><span class="wn">${(pm[mk]||[]).length}</span>`+(mk===nu?`<span class="nu">Lopend</span>`:"");
+    b.addEventListener("click",()=>{gekozenMaand=mk;renderMaand();});strook.appendChild(b);});
+  const act=strook.querySelector('[aria-current="true"]');if(act)act.scrollIntoView({block:"nearest",inline:"nearest"});
+  // kop + kpi
+  document.getElementById("m-eyebrow").textContent=isNu?"Deze maand, lopend":"Afgesloten maand";
+  document.getElementById("m-titel").innerHTML=`${mLabel(k).replace(/^./,c=>c.toUpperCase())}: <em>${cur.length}</em> ${cur.length===1?"afspraak":"afspraken"}`;
+  const wd=werkdagen(k,isNu?new Date():null);
+  document.getElementById("m-sub").textContent=isNu?`${wd} werkdagen tot en met vandaag`:`${wd} werkdagen`;
+  document.getElementById("mk-tot").textContent=cur.length;
+  document.getElementById("mk-tot-l").textContent="afspraken in "+MNAAM[Number(k.slice(5))-1];
+  // eerlijke vergelijking: lopende maand tegen dezelfde dag van vorige maand
+  const dagNr=isNu?new Date().getDate():31;
+  const prevTot=prev.filter(a=>Number(a.datum.slice(8))<=dagNr).length;
+  const delta=cur.length-prevTot;const pct=prevTot?Math.round(delta/prevTot*100):null;
+  const dEl=document.getElementById("mk-delta");dEl.textContent=(delta>0?"+":"")+delta;dEl.className=delta>0?"plus":delta<0?"min":"";
+  document.getElementById("mk-delta-l").textContent=`tegenover ${MNAAM[Number(v.slice(5))-1]}${isNu?" (zelfde periode)":""}${pct!==null?`, ${pct>0?"+":""}${pct}%`:""}`;
+  document.getElementById("mk-dag").textContent=wd?(cur.length/wd).toFixed(1).replace(".",","):"0";
+  const tk={};cur.forEach(a=>tk[a.klant]=(tk[a.klant]||0)+1);const top=Object.entries(tk).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById("mk-klant").textContent=top?top[0]:"-";
+  document.getElementById("mk-klant-l").textContent=top?`meeste afspraken (${top[1]})`:"meeste afspraken";
+  // maandgrafiek
+  const mc=document.getElementById("maandchart");mc.innerHTML="";const mx=Math.max(1,...ms.map(x=>(pm[x]||[]).length));
+  ms.forEach(mk=>{const n=(pm[mk]||[]).length;const [y,m]=mk.split("-").map(Number);const c=document.createElement("div");c.className="m-kol"+(mk===k?" sel":"");
+    c.innerHTML=`<span class="n">${n}</span><div class="bar" style="height:${Math.max(2,n/mx*160)}px"></div><span class="lbl">${MKORT[m-1]}</span>`;
+    tip(c,`<b>${mLabel(mk)}: ${n}</b>${mk===nu?"<br>lopende maand":""}`);c.addEventListener("click",()=>{gekozenMaand=mk;renderMaand();});mc.appendChild(c);});
+  // lijngrafiek cumulatief
+  const ORANJE="#FF4A18",GRIJS="#8C8C8C";
+  const kleurLeg=(el,a,b)=>{document.getElementById(el).innerHTML=`<span><i style="background:${ORANJE}"></i>${a}</span><span><i style="background:#7A7A7A"></i>${b}</span>`;};
+  kleurLeg("lijn-legenda",MNAAM[Number(k.slice(5))-1],MNAAM[Number(v.slice(5))-1]);
+  kleurLeg("klant-legenda",MNAAM[Number(k.slice(5))-1],MNAAM[Number(v.slice(5))-1]);
+  const cum=(lst,tot)=>{const per=new Array(32).fill(0);lst.forEach(a=>per[Number(a.datum.slice(8))]++);const out=[];let s=0;for(let d=1;d<=tot;d++){s+=per[d];out.push(s);}return out;};
+  const dim=(mk)=>{const [y,m]=mk.split("-").map(Number);return new Date(y,m,0).getDate();};
+  const cA=cum(cur,isNu?new Date().getDate():dim(k)),cB=cum(prev,dim(v));
+  const W=720,H=230,L=36,R=56,T=14,B=28,ymax=Math.max(4,...cA,...cB);
+  const xs=d=>L+(d-1)/30*(W-L-R),ys=n=>T+(1-n/ymax)*(H-T-B);
+  const pad2=n=>Math.ceil(n/5)*5;const ytop=pad2(ymax);
+  const ysc=n=>T+(1-n/ytop)*(H-T-B);
+  let g="";for(let i=0;i<=4;i++){const val=Math.round(ytop*i/4),y=ysc(val);g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#333" stroke-width="1"/><text x="${L-8}" y="${y+4}" fill="#8C8C8C" font-size="11" text-anchor="end">${val}</text>`;}
+  [1,8,15,22,29].forEach(d=>{g+=`<text x="${xs(d)}" y="${H-8}" fill="#8C8C8C" font-size="11" text-anchor="middle">${d}</text>`;});
+  const lijnD=(arr)=>arr.map((n,i)=>`${i?"L":"M"}${xs(i+1).toFixed(1)},${ysc(n).toFixed(1)}`).join(" ");
+  const eind=(arr,kleur,lbl)=>arr.length?`<circle cx="${xs(arr.length)}" cy="${ysc(arr[arr.length-1])}" r="4.5" fill="${kleur}" stroke="#222" stroke-width="2"/><text x="${xs(arr.length)+8}" y="${ysc(arr[arr.length-1])+4}" fill="#FFFFFF" font-size="12" font-weight="700">${arr[arr.length-1]}</text>`:"";
+  document.getElementById("lijnchart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Opbouw afspraken per dag, deze maand tegenover vorige maand">${g}<path d="${lijnD(cB)}" fill="none" stroke="${GRIJS}" stroke-width="2"/><path d="${lijnD(cA)}" fill="none" stroke="${ORANJE}" stroke-width="2.5"/>${eind(cB,GRIJS)}${eind(cA,ORANJE)}</svg>`;
+  // per klant vergeleken
+  const kp={};prev.forEach(a=>kp[a.klant]=(kp[a.klant]||0)+1);
+  const namen=[...new Set([...Object.keys(tk),...Object.keys(kp)])].sort((a,b)=>(tk[b]||0)-(tk[a]||0)||(kp[b]||0)-(kp[a]||0)||a.localeCompare(b));
+  const vmax=Math.max(1,...namen.map(n=>Math.max(tk[n]||0,kp[n]||0)));
+  const ve=document.getElementById("vergelijk");ve.innerHTML="";
+  if(!namen.length)ve.innerHTML=`<p class="leeg-staat">Nog geen afspraken in deze twee maanden.</p>`;
+  (toonAlleV?namen:namen.slice(0,15)).forEach(n=>{const a=tk[n]||0,b=kp[n]||0,dd=a-b;const r=document.createElement("div");r.className="vg";
+    r.innerHTML=`<span class="naam" title="${esc(n)}">${esc(n)}</span><div class="sporen"><div class="s1" style="width:${a/vmax*100}%"></div><div class="s2" style="width:${b/vmax*100}%"></div></div><div class="cijfers"><b>${a}</b><span class="${dd>0?"plus":dd<0?"min":""}">${dd>0?"+":""}${dd} vs ${b}</span></div>`;
+    tip(r,`<b>${esc(n)}</b><br>${MNAAM[Number(k.slice(5))-1]}: ${a}<br>${MNAAM[Number(v.slice(5))-1]}: ${b}`);ve.appendChild(r);});
+  const mv=document.getElementById("meer-vergelijk");mv.hidden=namen.length<=15;mv.textContent=toonAlleV?"Toon top 15":`Toon alle ${namen.length} klanten`;
+}
+document.getElementById("meer-vergelijk").addEventListener("click",()=>{toonAlleV=!toonAlleV;renderMaand();});
 // ---------- Totaal ----------
 let toonAlleK=false,toonAlleP=false;
 function balken(el,rij,max,suffix){
@@ -398,26 +505,20 @@ function renderTotaal(){
     k.addEventListener("click",()=>{toonTab("week");kies(w.ma);});
     ch.appendChild(k);
   });
-  const tk={},tp={};alle.forEach(a=>{tk[a.klant]=(tk[a.klant]||0)+1;if(a.profiel)tp[a.profiel]=(tp[a.profiel]||0)+1;});
+  const tk={};alle.forEach(a=>{tk[a.klant]=(tk[a.klant]||0)+1;});
   const rk=Object.entries(tk).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
-  const rp=Object.entries(tp).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
   balken(document.getElementById("tot-klanten"),toonAlleK?rk:rk.slice(0,15),rk.length?rk[0][1]:1,"in 2026");
-  balken(document.getElementById("tot-profielen"),toonAlleP?rp:rp.slice(0,15),rp.length?rp[0][1]:1,"in 2026");
-  const mk=document.getElementById("meer-klanten"),mp=document.getElementById("meer-profielen");
+  const mk=document.getElementById("meer-klanten");
   mk.hidden=rk.length<=15;mk.textContent=toonAlleK?"Toon top 15":`Toon alle ${rk.length} klanten`;
-  mp.hidden=rp.length<=15;mp.textContent=toonAlleP?"Toon top 15":`Toon alle ${rp.length} profielen`;
 }
 document.getElementById("meer-klanten").addEventListener("click",()=>{toonAlleK=!toonAlleK;renderTotaal();});
-document.getElementById("meer-profielen").addEventListener("click",()=>{toonAlleP=!toonAlleP;renderTotaal();});
 function toonTab(t){
-  const tot=t==="totaal";
-  document.getElementById("view-week").hidden=tot;document.getElementById("view-totaal").hidden=!tot;
-  document.getElementById("tab-week").setAttribute("aria-selected",String(!tot));
-  document.getElementById("tab-totaal").setAttribute("aria-selected",String(tot));
-  try{history.replaceState(null,"",tot?"#totaal":"#w"+gekozen.replace(/-/g,""));}catch(e){}
-  if(tot)renderTotaal();
+  ["week","maand","totaal"].forEach(x=>{document.getElementById("view-"+x).hidden=x!==t;document.getElementById("tab-"+x).setAttribute("aria-selected",String(x===t));});
+  try{history.replaceState(null,"",t==="week"?"#w"+gekozen.replace(/-/g,""):"#"+t);}catch(e){}
+  if(t==="totaal")renderTotaal();
+  if(t==="maand")renderMaand();
 }
-document.getElementById("tab-week").addEventListener("click",()=>toonTab("week"));
-document.getElementById("tab-totaal").addEventListener("click",()=>toonTab("totaal"));
+["week","maand","totaal"].forEach(x=>document.getElementById("tab-"+x).addEventListener("click",()=>toonTab(x)));
 if(location.hash==="#totaal")toonTab("totaal");
+if(location.hash==="#maand")toonTab("maand");
 </script>
