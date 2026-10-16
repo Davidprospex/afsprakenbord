@@ -1,0 +1,164 @@
+/* ============================================================================
+   Prospex Design System v1.0 (2026-09-29)
+   Self-contained huisstijl voor alles wat Claude voor Prospex maakt: rapporten,
+   one-pagers, dashboards, panelen, landingspagina's. Logo zit ingebakken als SVG.
+   Gebruik: zet de VOLLEDIGE inhoud van dit bestand inline in een <style> in de
+   <head>, zet class="prospex" op de <body> (licht, voor documenten en print) of
+   class="prospex prospex-dark" (donker, de look van prospex.nl).
+   Herkomst van elke waarde: live site www.prospex.nl, uitgelezen 2026-09-29.
+   Fonts: koppen in Owners Wide (Adobe Fonts, via jullie eigen Adobe-licentie),
+   tekst in Zalando Sans (open licentie). Staat Owners Wide niet op de machine,
+   dan valt de kop terug op Zalando Sans Expanded (open licentie, Google Fonts).
+   ============================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,400;0,700;1,400&family=Zalando+Sans+Expanded:wght@400;700;900&display=swap');
+
+:root{
+  --prospex-oranje:#FF4A18;
+  --prospex-oranje-diep:#E43100;
+  --prospex-oranje-licht:#FF724B;
+  --prospex-oranje-tint:#FFE7DF;
+  --prospex-zwart:#000000;
+  --prospex-antraciet:#191919;
+  --prospex-antraciet-2:#222222;
+  --prospex-antraciet-3:#2F2F2F;
+  --prospex-wit:#FFFFFF;
+  --prospex-creme:#FDF0E1;
+  --prospex-perzik:#FAD8B1;
+  --prospex-inkt:#131313;
+  --prospex-grijs:#3F3F3F;
+  --prospex-grijs-licht:#AFAFAF;
+  --prospex-lijn:#E6E6E6;
+  --prospex-lijn-donker:#2F2F2F;
+  --prospex-status-goed:#00A6A6;
+  --prospex-status-aandacht:#F2C200;
+  --prospex-status-risico:#D4148C;
+  --prospex-font-kop:'Owners Wide','owners-wide','Zalando Sans Expanded','Arial Black',sans-serif;
+  --prospex-font-body:'Zalando Sans','Owners','owners',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --prospex-radius:15px;
+  --prospex-radius-groot:20px;
+  --prospex-radius-klein:5px;
+  --prospex-radius-pil:999px;
+  --prospex-schaduw:0 1px 2px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.08);
+  --prospex-gloed:0 12px 36px rgba(255,74,24,.28);
+}
+
+/* ---------- Basis (licht: documenten, rapporten, print) ---------- */
+body.prospex,.prospex{font-family:var(--prospex-font-body);color:var(--prospex-inkt);background:var(--prospex-wit);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+.prospex h1,.prospex h2,.prospex h3,.prospex h4{font-family:var(--prospex-font-kop);font-weight:400;line-height:1.15;letter-spacing:0;color:inherit;margin:1.4em 0 .5em;}
+.prospex h1{font-size:2.1rem;}
+.prospex h2{font-size:1.5rem;}
+.prospex h3{font-size:1.15rem;}
+.prospex h4{font-size:1rem;font-weight:700;}
+.prospex h1 em,.prospex h2 em,.prospex h3 em,.prospex .prospex-display em{color:var(--prospex-oranje);font-style:normal;}
+.prospex strong{font-weight:700;}
+.prospex a{color:var(--prospex-oranje-diep);text-underline-offset:2px;}
+.prospex code{font-family:ui-monospace,Menlo,monospace;font-size:.88em;background:var(--prospex-creme);padding:1px 5px;border-radius:var(--prospex-radius-klein);}
+.prospex hr{border:0;border-top:1px solid var(--prospex-lijn);margin:2rem 0;}
+
+/* ---------- Donker (de look van prospex.nl: panelen, dashboards, hero-pagina's) ---------- */
+.prospex-dark,body.prospex.prospex-dark{background:var(--prospex-antraciet);color:var(--prospex-wit);}
+.prospex-dark a{color:var(--prospex-oranje-licht);}
+.prospex-dark code{background:var(--prospex-antraciet-3);color:#fff;}
+.prospex-dark hr{border-top-color:var(--prospex-lijn-donker);}
+
+/* ---------- Logo (SVG ingebakken) ---------- */
+/* .prospex-logo = zwart woordmerk voor lichte achtergrond; .is-white = wit woordmerk voor donker.
+   De chevron (de X) is altijd oranje. Nooit het favicon als logo gebruiken. */
+.prospex-logo{display:inline-block;width:132px;height:24px;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzUuMjU1IDMwLjYwOSI+CjxnIGRhdGEtbmFtZT0iUHJvc3BleCBMb2dvIj4KPHBhdGggZGF0YS1uYW1lPSJVbmlvbiAxIiBkPSJNOTYuMTQ1IDMwLjYwOVYuNjMyaDQuMzI5djUuMUExMS4wNSAxMS4wNSAwIDAgMSAxMTAuNDg2LjE4NWM3LjAzNSAwIDEyLjEzMSA0LjgyNiAxMi4xMzEgMTIuNDQ3cy01LjE0MiAxMi41MjgtMTIuMTMxIDEyLjUyOGExMS4wNSAxMS4wNSAwIDAgMS0xMC4wMTItNS41NDhsLjA0NSAxMC45OTJabTQuMzc0LTE3LjkzNmMwIDUuNzI4IDMuNjUzIDkuMjkgOC45MjkgOS4yOSA1LjE4NyAwIDguNzk1LTMuNTE3IDguNzk1LTkuMjlzLTMuNjA4LTkuMjktOC43OTUtOS4yOWMtNS4yNzYgMC04LjkyOSAzLjUxNy04LjkyOSA5LjI5TTAgMzAuNjA5Vi42MzJoNC4zMjl2NS4xQTExLjA1IDExLjA1IDAgMCAxIDE0LjM0MS4xODVjNy4wMzUgMCAxMi4xMzEgNC44MjYgMTIuMTMxIDEyLjQ0N1MyMS4zMzEgMjUuMTYgMTQuMzQ1IDI1LjE2YTExLjA1IDExLjA1IDAgMCAxLTEwLjAxMi01LjU0OGwuMDQ1IDEwLjk5MlptNC4zNzQtMTcuOTM2YzAgNS43MjggMy42NTMgOS4yOSA4LjkzIDkuMjkgNS4xODYgMCA4Ljc5NC0zLjUxNyA4Ljc5NC05LjI5cy0zLjYwOC05LjI5LTguNzk0LTkuMjljLTUuMjc3IDAtOC45MyAzLjUxNy04LjkzIDkuMjltMTIwLjE4MSAwYzAtNy42MjEgNS41LTEyLjY3MyAxMi45ODktMTIuNjczIDcuMjE1IDAgMTIuODA3IDQuNzgxIDEyLjgwNyAxMi41ODN2LjYzMWgtMjEuNTU2Yy4yMjUgNS41NDcgMy43NDMgOC44ODQgOC43IDguODg0YTguMiA4LjIgMCAwIDAgOC4yMDctNmg0LjIzOWMtMS40NDMgNS42ODMtNi4xMzMgOS4yLTEyLjQ5MiA5LjItNy40ODMuMDAyLTEyLjg5NC00Ljg2OC0xMi44OTQtMTIuNjI1bTQuNDY1LTIuMzQ1aDE2Ljg2N2E4LjI1IDguMjUgMCAwIDAtOC40MzQtNy4xMjYgOC4zMiA4LjMyIDAgMCAwLTguNDM0IDcuMTI2Wm0tODYuNzY1IDIuMzQ1QzQyLjI1NSA0Ljg3MyA0Ny44MDMgMCA1NS40MjQgMGM3LjY2NiAwIDEzLjIxNCA0Ljg3MSAxMy4yMTQgMTIuNjczIDAgNy43NTctNS41NDggMTIuNjI3LTEzLjIxNCAxMi42MjdzLTEzLjE3LTQuODctMTMuMTctMTIuNjI3Wm00LjMzLS4wNDVjMCA1LjkwOCAzLjcgOS40MjYgOC44MzkgOS40MjZzOC44ODUtMy41MTggOC44ODUtOS4zODFjMC01LjkwOC0zLjc0NC05LjQyNi04Ljg4NS05LjQyNnMtOC44NCAzLjUxOC04Ljg0IDkuMzgxWm0yMy41ODUgMy41NjNoNC4xNDljLjk5MiA0LjA1OCAzLjg3OCA2IDguNTY4IDYgNC4zMyAwIDYuODEtMS41NzkgNi44MS0zLjk2OSAwLTIuODQxLTMuODc5LTMuNDI3LTguMTE4LTQuMDU4LTUuMTg2LS44MTMtMTAuOTU4LTEuNzU5LTEwLjk1OC03LjAzNSAwLTQuMDU5IDQuMDU4LTcuMDM1IDEwLjYtNy4wMzUgNi42NzQgMCAxMS4yNzQgMi45NzYgMTIuNTM3IDguNTIzaC00LjFjLTEuMDM3LTMuNy0zLjk2OC01LjQ1Ny04LjM4OC01LjQ1Ny00LjE0OCAwLTYuNDQ4IDEuNDg5LTYuNDQ4IDMuNjUzIDAgMi44IDMuOTY4IDMuMzgyIDguMyA0LjEgNS4xNDEuODU3IDEwLjc3NyAxLjg0OSAxMC43NzcgNi45IDAgNC4yODMtNC4yODQgNy40LTEwLjk1OCA3LjQtNi45MDktLjAwMy0xMS41OTYtMi45NzktMTIuNzcyLTkuMDIyWm05NS45ODkgMi4zMzUgMi45MjQtMi45MjUgNi4xNzEgNi4xNzF2Mi45MjFoLTIuOTI3Wk0yOC42ODIgMjQuNjY5Vi42MzJoNC4zNzV2NC41NTVBOS4zIDkuMyAwIDAgMSA0MS40NDQuMjcxYTUuNSA1LjUgMCAwIDEgLjg1OC4wNDV2My44NzlhMTAuMyAxMC4zIDAgMCAwLTEuNjctLjEzNSA4LjIyIDguMjIgMCAwIDAtNy41NzUgNC4zMjl2MTYuMjhaTTE2Ni4xNjkgNi44MjdsNi4xNi02LjE2aDIuOTI3djIuOTIybC02LjE2IDYuMTYxWiIgZmlsbD0iIzAwMCIvPgo8cGF0aCBkYXRhLW5hbWU9IlBhdGggNSIgZD0iTTE1NC4xMTIuNjY2aC0yLjkyNnYyLjkyMmw5LjA5MSA5LjA5MS05LjA5MSA5LjA5MXYyLjkyMmgyLjkyNmwxMi4wMTUtMTIuMDExWiIgZmlsbD0iI2ZmNGExOCIvPgo8L2c+Cjwvc3ZnPg==) no-repeat left center;background-size:contain;vertical-align:middle;}
+.prospex-logo.is-white,.prospex-dark .prospex-logo:not(.is-black){background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzUuMjU1IDMwLjYwOSI+CjxnIGRhdGEtbmFtZT0iUHJvc3BleCBMb2dvIj4KPHBhdGggZGF0YS1uYW1lPSJVbmlvbiAxIiBkPSJNOTYuMTQ1IDMwLjYwOVYuNjMyaDQuMzI5djUuMUExMS4wNSAxMS4wNSAwIDAgMSAxMTAuNDg2LjE4NWM3LjAzNSAwIDEyLjEzMSA0LjgyNiAxMi4xMzEgMTIuNDQ3cy01LjE0MiAxMi41MjgtMTIuMTMxIDEyLjUyOGExMS4wNSAxMS4wNSAwIDAgMS0xMC4wMTItNS41NDhsLjA0NSAxMC45OTJabTQuMzc0LTE3LjkzNmMwIDUuNzI4IDMuNjUzIDkuMjkgOC45MjkgOS4yOSA1LjE4NyAwIDguNzk1LTMuNTE3IDguNzk1LTkuMjlzLTMuNjA4LTkuMjktOC43OTUtOS4yOWMtNS4yNzYgMC04LjkyOSAzLjUxNy04LjkyOSA5LjI5TTAgMzAuNjA5Vi42MzJoNC4zMjl2NS4xQTExLjA1IDExLjA1IDAgMCAxIDE0LjM0MS4xODVjNy4wMzUgMCAxMi4xMzEgNC44MjYgMTIuMTMxIDEyLjQ0N1MyMS4zMzEgMjUuMTYgMTQuMzQ1IDI1LjE2YTExLjA1IDExLjA1IDAgMCAxLTEwLjAxMi01LjU0OGwuMDQ1IDEwLjk5MlptNC4zNzQtMTcuOTM2YzAgNS43MjggMy42NTMgOS4yOSA4LjkzIDkuMjkgNS4xODYgMCA4Ljc5NC0zLjUxNyA4Ljc5NC05LjI5cy0zLjYwOC05LjI5LTguNzk0LTkuMjljLTUuMjc3IDAtOC45MyAzLjUxNy04LjkzIDkuMjltMTIwLjE4MSAwYzAtNy42MjEgNS41LTEyLjY3MyAxMi45ODktMTIuNjczIDcuMjE1IDAgMTIuODA3IDQuNzgxIDEyLjgwNyAxMi41ODN2LjYzMWgtMjEuNTU2Yy4yMjUgNS41NDcgMy43NDMgOC44ODQgOC43IDguODg0YTguMiA4LjIgMCAwIDAgOC4yMDctNmg0LjIzOWMtMS40NDMgNS42ODMtNi4xMzMgOS4yLTEyLjQ5MiA5LjItNy40ODMuMDAyLTEyLjg5NC00Ljg2OC0xMi44OTQtMTIuNjI1bTQuNDY1LTIuMzQ1aDE2Ljg2N2E4LjI1IDguMjUgMCAwIDAtOC40MzQtNy4xMjYgOC4zMiA4LjMyIDAgMCAwLTguNDM0IDcuMTI2Wm0tODYuNzY1IDIuMzQ1QzQyLjI1NSA0Ljg3MyA0Ny44MDMgMCA1NS40MjQgMGM3LjY2NiAwIDEzLjIxNCA0Ljg3MSAxMy4yMTQgMTIuNjczIDAgNy43NTctNS41NDggMTIuNjI3LTEzLjIxNCAxMi42MjdzLTEzLjE3LTQuODctMTMuMTctMTIuNjI3Wm00LjMzLS4wNDVjMCA1LjkwOCAzLjcgOS40MjYgOC44MzkgOS40MjZzOC44ODUtMy41MTggOC44ODUtOS4zODFjMC01LjkwOC0zLjc0NC05LjQyNi04Ljg4NS05LjQyNnMtOC44NCAzLjUxOC04Ljg0IDkuMzgxWm0yMy41ODUgMy41NjNoNC4xNDljLjk5MiA0LjA1OCAzLjg3OCA2IDguNTY4IDYgNC4zMyAwIDYuODEtMS41NzkgNi44MS0zLjk2OSAwLTIuODQxLTMuODc5LTMuNDI3LTguMTE4LTQuMDU4LTUuMTg2LS44MTMtMTAuOTU4LTEuNzU5LTEwLjk1OC03LjAzNSAwLTQuMDU5IDQuMDU4LTcuMDM1IDEwLjYtNy4wMzUgNi42NzQgMCAxMS4yNzQgMi45NzYgMTIuNTM3IDguNTIzaC00LjFjLTEuMDM3LTMuNy0zLjk2OC01LjQ1Ny04LjM4OC01LjQ1Ny00LjE0OCAwLTYuNDQ4IDEuNDg5LTYuNDQ4IDMuNjUzIDAgMi44IDMuOTY4IDMuMzgyIDguMyA0LjEgNS4xNDEuODU3IDEwLjc3NyAxLjg0OSAxMC43NzcgNi45IDAgNC4yODMtNC4yODQgNy40LTEwLjk1OCA3LjQtNi45MDktLjAwMy0xMS41OTYtMi45NzktMTIuNzcyLTkuMDIyWm05NS45ODkgMi4zMzUgMi45MjQtMi45MjUgNi4xNzEgNi4xNzF2Mi45MjFoLTIuOTI3Wk0yOC42ODIgMjQuNjY5Vi42MzJoNC4zNzV2NC41NTVBOS4zIDkuMyAwIDAgMSA0MS40NDQuMjcxYTUuNSA1LjUgMCAwIDEgLjg1OC4wNDV2My44NzlhMTAuMyAxMC4zIDAgMCAwLTEuNjctLjEzNSA4LjIyIDguMjIgMCAwIDAtNy41NzUgNC4zMjl2MTYuMjhaTTE2Ni4xNjkgNi44MjdsNi4xNi02LjE2aDIuOTI3djIuOTIybC02LjE2IDYuMTYxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkYXRhLW5hbWU9IlBhdGggNSIgZD0iTTE1NC4xMTIuNjY2aC0yLjkyNnYyLjkyMmw5LjA5MSA5LjA5MS05LjA5MSA5LjA5MXYyLjkyMmgyLjkyNmwxMi4wMTUtMTIuMDExWiIgZmlsbD0iI2ZmNGExOCIvPgo8L2c+Cjwvc3ZnPg==);}
+.prospex-logo.is-large{width:220px;height:39px;}
+
+/* ---------- Header en footer ---------- */
+.prospex-header{display:flex;align-items:center;gap:18px;padding:18px 24px;background:var(--prospex-zwart);color:#fff;border-radius:var(--prospex-radius);}
+.prospex-header .prospex-logo{background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzUuMjU1IDMwLjYwOSI+CjxnIGRhdGEtbmFtZT0iUHJvc3BleCBMb2dvIj4KPHBhdGggZGF0YS1uYW1lPSJVbmlvbiAxIiBkPSJNOTYuMTQ1IDMwLjYwOVYuNjMyaDQuMzI5djUuMUExMS4wNSAxMS4wNSAwIDAgMSAxMTAuNDg2LjE4NWM3LjAzNSAwIDEyLjEzMSA0LjgyNiAxMi4xMzEgMTIuNDQ3cy01LjE0MiAxMi41MjgtMTIuMTMxIDEyLjUyOGExMS4wNSAxMS4wNSAwIDAgMS0xMC4wMTItNS41NDhsLjA0NSAxMC45OTJabTQuMzc0LTE3LjkzNmMwIDUuNzI4IDMuNjUzIDkuMjkgOC45MjkgOS4yOSA1LjE4NyAwIDguNzk1LTMuNTE3IDguNzk1LTkuMjlzLTMuNjA4LTkuMjktOC43OTUtOS4yOWMtNS4yNzYgMC04LjkyOSAzLjUxNy04LjkyOSA5LjI5TTAgMzAuNjA5Vi42MzJoNC4zMjl2NS4xQTExLjA1IDExLjA1IDAgMCAxIDE0LjM0MS4xODVjNy4wMzUgMCAxMi4xMzEgNC44MjYgMTIuMTMxIDEyLjQ0N1MyMS4zMzEgMjUuMTYgMTQuMzQ1IDI1LjE2YTExLjA1IDExLjA1IDAgMCAxLTEwLjAxMi01LjU0OGwuMDQ1IDEwLjk5MlptNC4zNzQtMTcuOTM2YzAgNS43MjggMy42NTMgOS4yOSA4LjkzIDkuMjkgNS4xODYgMCA4Ljc5NC0zLjUxNyA4Ljc5NC05LjI5cy0zLjYwOC05LjI5LTguNzk0LTkuMjljLTUuMjc3IDAtOC45MyAzLjUxNy04LjkzIDkuMjltMTIwLjE4MSAwYzAtNy42MjEgNS41LTEyLjY3MyAxMi45ODktMTIuNjczIDcuMjE1IDAgMTIuODA3IDQuNzgxIDEyLjgwNyAxMi41ODN2LjYzMWgtMjEuNTU2Yy4yMjUgNS41NDcgMy43NDMgOC44ODQgOC43IDguODg0YTguMiA4LjIgMCAwIDAgOC4yMDctNmg0LjIzOWMtMS40NDMgNS42ODMtNi4xMzMgOS4yLTEyLjQ5MiA5LjItNy40ODMuMDAyLTEyLjg5NC00Ljg2OC0xMi44OTQtMTIuNjI1bTQuNDY1LTIuMzQ1aDE2Ljg2N2E4LjI1IDguMjUgMCAwIDAtOC40MzQtNy4xMjYgOC4zMiA4LjMyIDAgMCAwLTguNDM0IDcuMTI2Wm0tODYuNzY1IDIuMzQ1QzQyLjI1NSA0Ljg3MyA0Ny44MDMgMCA1NS40MjQgMGM3LjY2NiAwIDEzLjIxNCA0Ljg3MSAxMy4yMTQgMTIuNjczIDAgNy43NTctNS41NDggMTIuNjI3LTEzLjIxNCAxMi42MjdzLTEzLjE3LTQuODctMTMuMTctMTIuNjI3Wm00LjMzLS4wNDVjMCA1LjkwOCAzLjcgOS40MjYgOC44MzkgOS40MjZzOC44ODUtMy41MTggOC44ODUtOS4zODFjMC01LjkwOC0zLjc0NC05LjQyNi04Ljg4NS05LjQyNnMtOC44NCAzLjUxOC04Ljg0IDkuMzgxWm0yMy41ODUgMy41NjNoNC4xNDljLjk5MiA0LjA1OCAzLjg3OCA2IDguNTY4IDYgNC4zMyAwIDYuODEtMS41NzkgNi44MS0zLjk2OSAwLTIuODQxLTMuODc5LTMuNDI3LTguMTE4LTQuMDU4LTUuMTg2LS44MTMtMTAuOTU4LTEuNzU5LTEwLjk1OC03LjAzNSAwLTQuMDU5IDQuMDU4LTcuMDM1IDEwLjYtNy4wMzUgNi42NzQgMCAxMS4yNzQgMi45NzYgMTIuNTM3IDguNTIzaC00LjFjLTEuMDM3LTMuNy0zLjk2OC01LjQ1Ny04LjM4OC01LjQ1Ny00LjE0OCAwLTYuNDQ4IDEuNDg5LTYuNDQ4IDMuNjUzIDAgMi44IDMuOTY4IDMuMzgyIDguMyA0LjEgNS4xNDEuODU3IDEwLjc3NyAxLjg0OSAxMC43NzcgNi45IDAgNC4yODMtNC4yODQgNy40LTEwLjk1OCA3LjQtNi45MDktLjAwMy0xMS41OTYtMi45NzktMTIuNzcyLTkuMDIyWm05NS45ODkgMi4zMzUgMi45MjQtMi45MjUgNi4xNzEgNi4xNzF2Mi45MjFoLTIuOTI3Wk0yOC42ODIgMjQuNjY5Vi42MzJoNC4zNzV2NC41NTVBOS4zIDkuMyAwIDAgMSA0MS40NDQuMjcxYTUuNSA1LjUgMCAwIDEgLjg1OC4wNDV2My44NzlhMTAuMyAxMC4zIDAgMCAwLTEuNjctLjEzNSA4LjIyIDguMjIgMCAwIDAtNy41NzUgNC4zMjl2MTYuMjhaTTE2Ni4xNjkgNi44MjdsNi4xNi02LjE2aDIuOTI3djIuOTIybC02LjE2IDYuMTYxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkYXRhLW5hbWU9IlBhdGggNSIgZD0iTTE1NC4xMTIuNjY2aC0yLjkyNnYyLjkyMmw5LjA5MSA5LjA5MS05LjA5MSA5LjA5MXYyLjkyMmgyLjkyNmwxMi4wMTUtMTIuMDExWiIgZmlsbD0iI2ZmNGExOCIvPgo8L2c+Cjwvc3ZnPg==);}
+.prospex-header .prospex-title{font-family:var(--prospex-font-kop);font-size:1.05rem;margin:0;color:#fff;padding-left:18px;border-left:1px solid var(--prospex-lijn-donker);}
+.prospex-header .prospex-meta{margin-left:auto;font-size:.82rem;color:var(--prospex-grijs-licht);text-align:right;}
+.prospex-footer{margin-top:36px;padding-top:12px;border-top:1px solid var(--prospex-lijn);font-size:.8rem;color:var(--prospex-grijs);display:flex;gap:12px;align-items:center;}
+.prospex-dark .prospex-footer{border-top-color:var(--prospex-lijn-donker);color:var(--prospex-grijs-licht);}
+
+/* ---------- Display, eyebrow, cijfers ---------- */
+.prospex .prospex-display{font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:clamp(2.2rem,5.5vw,4.4rem);line-height:1.02;margin:0 0 .35em;}
+.prospex-eyebrow{display:block;font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:.78rem;letter-spacing:.06em;color:var(--prospex-oranje);margin:0 0 .8rem;}
+.prospex-numeral{font-family:var(--prospex-font-kop);font-weight:700;font-size:clamp(2.4rem,6vw,4rem);line-height:1;color:var(--prospex-oranje);}
+.prospex-stat{display:flex;flex-direction:column;gap:6px;}
+.prospex-stat small{font-size:.9rem;color:inherit;opacity:.8;}
+
+/* ---------- Opsomming met de chevron uit het logo ---------- */
+.prospex ul.prospex-chevrons{list-style:none;padding-left:0;}
+.prospex ul.prospex-chevrons li{position:relative;padding-left:22px;margin:.4em 0;}
+.prospex ul.prospex-chevrons li::before{content:"";position:absolute;left:0;top:.38em;width:9px;height:14px;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjE1MSAwIDE2IDI1LjUiPjxwYXRoIGQ9Ik0xNTQuMTEyLjY2NmgtMi45MjZ2Mi45MjJsOS4wOTEgOS4wOTEtOS4wOTEgOS4wOTF2Mi45MjJoMi45MjZsMTIuMDE1LTEyLjAxMVoiIGZpbGw9IiNmZjRhMTgiLz48L3N2Zz4=) no-repeat center/contain;}
+
+/* ---------- Knoppen (pil) ---------- */
+.prospex-btn{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:.5em;font-family:var(--prospex-font-body);font-weight:700;font-size:.95rem;line-height:1;padding:14px 26px;border-radius:var(--prospex-radius-pil);border:1.5px solid transparent;cursor:pointer;text-decoration:none;transition:background .2s ease,color .2s ease,box-shadow .2s ease,transform .12s ease;}
+.prospex-btn:hover{transform:translateY(-1px);}
+.prospex-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.4);}
+.prospex-btn--primary{background:var(--prospex-oranje);color:#fff;}
+.prospex-btn--primary:hover{background:var(--prospex-oranje-diep);color:#fff;box-shadow:var(--prospex-gloed);}
+.prospex-btn--outline{background:transparent;color:var(--prospex-inkt);border-color:var(--prospex-inkt);}
+.prospex-btn--outline:hover{background:var(--prospex-inkt);color:#fff;}
+.prospex-dark .prospex-btn--outline{color:#fff;border-color:rgba(255,255,255,.7);}
+.prospex-dark .prospex-btn--outline:hover{background:#fff;color:var(--prospex-zwart);}
+.prospex-btn--ghost{background:transparent;color:var(--prospex-oranje-diep);}
+.prospex-btn--ghost:hover{background:var(--prospex-oranje-tint);}
+.prospex-btn[disabled],.prospex-btn.is-disabled{opacity:.45;pointer-events:none;}
+/* Knoppen als <a>: de linkkleur mag niet winnen. */
+.prospex a.prospex-btn{text-decoration:none;}
+.prospex a.prospex-btn--primary,.prospex a.prospex-btn--primary:hover,.prospex-btn--primary:hover{color:#fff;}
+.prospex a.prospex-btn--outline{color:var(--prospex-inkt);}
+.prospex a.prospex-btn--outline:hover{color:#fff;}
+.prospex a.prospex-btn--ghost{color:var(--prospex-oranje-diep);}
+.prospex.prospex-dark a.prospex-btn--outline,.prospex .prospex-dark a.prospex-btn--outline,.prospex .prospex-hero a.prospex-btn--outline,.prospex-hero .prospex-btn--outline,.prospex .prospex-header a.prospex-btn--outline{color:#fff;border-color:rgba(255,255,255,.7);}
+.prospex.prospex-dark a.prospex-btn--outline:hover,.prospex .prospex-dark a.prospex-btn--outline:hover,.prospex .prospex-hero a.prospex-btn--outline:hover,.prospex-hero .prospex-btn--outline:hover{background:#fff;color:var(--prospex-zwart);}
+.prospex-hero code,.prospex-card--dark code,.prospex-header code{background:var(--prospex-antraciet-3);color:#fff;}
+
+/* ---------- Badges ---------- */
+.prospex-badge{display:inline-block;background:var(--prospex-oranje);color:#fff;border-radius:var(--prospex-radius-pil);padding:3px 11px;font-size:.74rem;font-weight:700;line-height:1.4;}
+.prospex-badge--outline{background:transparent;color:var(--prospex-oranje-diep);border:1.5px solid var(--prospex-oranje);}
+.prospex-badge--soft{background:var(--prospex-creme);color:var(--prospex-inkt);}
+.prospex-badge--dark{background:var(--prospex-zwart);color:#fff;}
+/* Status: altijd met tekstlabel, nooit alleen kleur. Oranje is merk, geen status. */
+.prospex-status{display:inline-flex;align-items:center;gap:6px;border-radius:var(--prospex-radius-pil);padding:3px 11px;font-size:.74rem;font-weight:700;}
+.prospex-status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;}
+.prospex-status--goed{background:rgba(0,166,166,.14);color:#007A7A;}
+.prospex-status--aandacht{background:rgba(242,194,0,.22);color:#6B5500;}
+.prospex-status--risico{background:rgba(212,20,140,.13);color:#A00F69;}
+.prospex-status--optioneel{background:rgba(0,0,0,.07);color:var(--prospex-grijs);}
+.prospex-dark .prospex-status--goed{color:#3FD6D6;background:rgba(0,166,166,.22);}
+.prospex-dark .prospex-status--aandacht{color:#FFD83D;background:rgba(242,194,0,.18);}
+.prospex-dark .prospex-status--risico{color:#FF5CC0;background:rgba(212,20,140,.22);}
+.prospex-dark .prospex-status--optioneel{color:#CFCFCF;background:rgba(255,255,255,.1);}
+
+/* ---------- Kaarten ---------- */
+.prospex-card{box-sizing:border-box;position:relative;background:var(--prospex-wit);border:1px solid var(--prospex-lijn);border-radius:var(--prospex-radius);padding:26px;box-shadow:var(--prospex-schaduw);}
+.prospex-card--dark{background:var(--prospex-antraciet-2);border-color:var(--prospex-lijn-donker);color:#fff;box-shadow:none;}
+.prospex-dark .prospex-card:not(.prospex-card--featured):not(.prospex-card--light){background:var(--prospex-antraciet-2);border-color:var(--prospex-lijn-donker);color:#fff;box-shadow:none;}
+.prospex-card--featured{background:var(--prospex-oranje);border-color:transparent;color:#fff;box-shadow:var(--prospex-gloed);}
+.prospex-card--featured h1,.prospex-card--featured h2,.prospex-card--featured h3,.prospex-card--featured em{color:#fff;}
+.prospex-card--label{padding-top:52px;}
+.prospex-card--label .prospex-card-label{position:absolute;top:0;left:0;background:var(--prospex-oranje);color:#fff;font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:.85rem;padding:8px 18px;border-radius:var(--prospex-radius) 0 var(--prospex-radius-groot) 0;}
+
+/* ---------- Infopaneel ---------- */
+.prospex-panel{box-sizing:border-box;background:var(--prospex-creme);border-left:4px solid var(--prospex-oranje);border-radius:var(--prospex-radius-klein);padding:16px 20px;color:var(--prospex-inkt);}
+.prospex-dark .prospex-panel{background:var(--prospex-antraciet-3);color:#fff;}
+.prospex-panel .prospex-eyebrow{margin-bottom:.4rem;}
+
+/* ---------- Hero ---------- */
+.prospex-hero{box-sizing:border-box;position:relative;background:var(--prospex-zwart);color:#fff;padding:64px 44px;border-radius:var(--prospex-radius);overflow:hidden;}
+.prospex-hero h1,.prospex-hero .prospex-display{font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:clamp(2.2rem,5.5vw,4.4rem);line-height:1.02;color:#fff;margin:0 0 .35em;}
+.prospex-hero h1 em,.prospex-hero .prospex-display em{color:var(--prospex-oranje);font-style:normal;}
+.prospex-hero p{color:rgba(255,255,255,.78);max-width:56ch;}
+
+/* ---------- Tabellen ---------- */
+.prospex table{border-collapse:collapse;width:100%;font-size:.92rem;}
+.prospex th{background:var(--prospex-zwart);color:#fff;font-weight:700;text-align:left;padding:9px 12px;border-bottom:3px solid var(--prospex-oranje);}
+.prospex td{border-bottom:1px solid var(--prospex-lijn);padding:9px 12px;vertical-align:top;}
+.prospex tr:nth-child(even) td{background:#FAFAFA;}
+.prospex-dark td{border-bottom-color:var(--prospex-lijn-donker);}
+.prospex-dark tr:nth-child(even) td{background:rgba(255,255,255,.03);}
+
+/* ---------- Print ---------- */
+@media print{
+  .prospex{font-size:10.5pt;}
+  .prospex-card,.prospex-panel,.prospex-hero,table,tr{break-inside:avoid;}
+  .prospex h2,.prospex h3{break-after:avoid;}
+}

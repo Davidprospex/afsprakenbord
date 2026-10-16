@@ -1,0 +1,303 @@
+<title>Afsprakenbord Prospex</title>
+<style>
+/*DS*/
+</style>
+<style>
+/* Layout: zwarte kopbalk, weekstrook als navigatie, daaronder de gekozen week: totaal, per dag, per klant, lijst. */
+:root{
+  --bg:#191919; --vlak:#222222; --vlak-2:#2F2F2F; --lijn:#2F2F2F;
+  --tekst:#FFFFFF; --tekst-2:#BDBDBD; --tekst-3:#8A8A8A;
+  --accent:#FF4A18; --accent-zacht:rgba(255,74,24,.16);
+  --risico:#FF5CC0;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);}
+body{margin:0;}
+.wrap{box-sizing:border-box;max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:flex;flex-direction:column;gap:22px;}
+.prospex-header{flex-wrap:wrap;row-gap:8px;}
+.prospex-header .prospex-meta{font-variant-numeric:tabular-nums;}
+.eyebrow{font-family:var(--prospex-font-kop);font-weight:700;text-transform:uppercase;font-size:.72rem;letter-spacing:.07em;color:var(--tekst-3);margin:0;}
+
+/* Weekstrook */
+.weken{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;}
+.week{flex:0 0 auto;scroll-snap-align:end;box-sizing:border-box;min-width:112px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:12px 14px;border-radius:var(--prospex-radius);border:1px solid var(--lijn);background:var(--vlak);color:var(--tekst);font:inherit;text-align:left;cursor:pointer;transition:border-color .15s,background .15s;}
+.week:hover{border-color:var(--tekst-3);}
+.week:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.45);}
+.week .wk{font-family:var(--prospex-font-kop);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;}
+.week .wn{font-family:var(--prospex-font-kop);font-weight:700;font-size:1.6rem;line-height:1;font-variant-numeric:tabular-nums;}
+.week .wd{font-size:.75rem;color:var(--tekst-3);}
+.week[aria-current="true"]{background:var(--accent);border-color:var(--accent);}
+.week[aria-current="true"] .wd{color:rgba(255,255,255,.8);}
+.week .nu{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);}
+.week[aria-current="true"] .nu{color:#fff;}
+
+/* Kop van de gekozen week */
+.weekkop{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;}
+.weekkop h1{margin:0;font-size:clamp(1.5rem,3.4vw,2.2rem);text-wrap:balance;}
+.weekkop .sub{margin:.35rem 0 0;color:var(--tekst-2);font-size:.95rem;}
+.stats{display:flex;gap:28px;flex-wrap:wrap;}
+.stat{display:flex;flex-direction:column;gap:4px;}
+.stat b{font-family:var(--prospex-font-kop);font-weight:700;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1;font-variant-numeric:tabular-nums;}
+.stat b.oranje{color:var(--accent);}
+.stat span{font-size:.82rem;color:var(--tekst-2);}
+.nav{display:flex;gap:8px;}
+.nav button{font:inherit;font-weight:700;font-size:.85rem;color:var(--tekst);background:transparent;border:1.5px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;cursor:pointer;}
+.nav button:hover:not([disabled]){background:#fff;color:#000;}
+.nav button[disabled]{opacity:.35;cursor:default;}
+.nav button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.45);}
+
+/* Twee panelen */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr);}}
+.paneel{box-sizing:border-box;background:var(--vlak);border:1px solid var(--lijn);border-radius:var(--prospex-radius);padding:20px 22px;display:flex;flex-direction:column;gap:16px;min-width:0;}
+.paneel h2{margin:0;font-size:1.05rem;}
+
+/* Per werkdag: kolommen */
+.dagen{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:end;height:220px;padding-top:22px;}
+.dag{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%;cursor:default;}
+.dag .bar{width:min(46px,70%);background:var(--accent);border-radius:4px 4px 0 0;min-height:2px;transition:height .3s ease;}
+.dag .bar.leeg{background:var(--vlak-2);}
+.dag .n{font-family:var(--prospex-font-kop);font-weight:700;font-size:.95rem;font-variant-numeric:tabular-nums;}
+.dag .lbl{font-size:.78rem;color:var(--tekst-2);text-align:center;}
+.dag.vandaag .lbl{color:var(--tekst);font-weight:700;}
+.dag.toekomst .n{color:var(--tekst-3);}
+.as{border-top:1px solid var(--lijn);margin-top:-6px;}
+
+/* Per klant: horizontale balken */
+.klanten{display:flex;flex-direction:column;gap:9px;}
+.klant{display:grid;grid-template-columns:minmax(90px,160px) minmax(0,1fr) 2.2em;align-items:center;gap:12px;}
+.klant .naam{font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.klant .spoor{height:14px;}
+.klant .vul{height:100%;background:var(--accent);border-radius:0 4px 4px 0;min-width:3px;}
+.klant .aantal{font-family:var(--prospex-font-kop);font-weight:700;text-align:right;font-variant-numeric:tabular-nums;}
+
+/* Lijst */
+.lijst-wrap{overflow-x:auto;}
+.prospex .lijst{font-size:.9rem;}
+.prospex .lijst th{background:#000;}
+.prospex .lijst td{font-variant-numeric:tabular-nums;}
+.prospex-dark .lijst tr:nth-child(even) td{background:rgba(255,255,255,.03);}
+.afgekeurd td{color:var(--tekst-3);}
+.afgekeurd td.k{text-decoration:line-through;}
+.chip{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap;}
+.chip.telt{background:rgba(0,166,166,.22);color:#3FD6D6;}
+.chip.af{background:rgba(212,20,140,.22);color:var(--risico);}
+
+.leeg-staat{color:var(--tekst-2);font-size:.95rem;margin:0;}
+.tip{position:fixed;pointer-events:none;background:#000;color:#fff;border:1px solid var(--lijn);border-radius:8px;padding:8px 10px;font-size:.8rem;line-height:1.4;max-width:240px;z-index:10;}
+.prospex-footer{margin-top:4px;}
+@media (prefers-reduced-motion:reduce){.dag .bar{transition:none;}}
+</style>
+
+<div class="prospex prospex-dark">
+<div class="wrap">
+  <header class="prospex-header">
+    <span class="prospex-logo"></span>
+    <p class="prospex-title">Afsprakenbord</p>
+    <div class="prospex-meta" id="meta">&nbsp;</div>
+  </header>
+
+  <section aria-label="Weken">
+    <p class="eyebrow" style="margin-bottom:10px">Alle weken, klik om te openen</p>
+    <div class="weken" id="weken"></div>
+  </section>
+
+  <section class="weekkop">
+    <div>
+      <span class="prospex-eyebrow" id="wk-eyebrow">Deze week</span>
+      <h1 id="wk-titel">Nieuwe <em>afspraken</em></h1>
+      <p class="sub" id="wk-sub">&nbsp;</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b class="oranje" id="st-week">0</b><span>deze week</span></div>
+      <div class="stat"><b id="st-vandaag">0</b><span id="st-vandaag-l">vandaag</span></div>
+      <div class="stat"><b id="st-vorige">0</b><span>week ervoor</span></div>
+    </div>
+    <div class="nav">
+      <button type="button" id="vorige">‹ Vorige week</button>
+      <button type="button" id="volgende">Volgende week ›</button>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="paneel">
+      <h2>Per <em>werkdag</em></h2>
+      <div class="dagen" id="dagen"></div>
+      <div class="as"></div>
+    </section>
+    <section class="paneel">
+      <h2>Per <em>klant</em></h2>
+      <div class="klanten" id="klanten"></div>
+    </section>
+  </div>
+
+  <section class="paneel">
+    <h2>Per <em>profiel</em></h2>
+    <div class="klanten" id="profielen"></div>
+  </section>
+
+  <section class="paneel">
+    <h2>Alle afspraken <em>deze week</em></h2>
+    <div class="lijst-wrap">
+      <table class="lijst">
+        <thead><tr><th>Gemaakt</th><th>Tijd</th><th>Klant</th><th>Profiel</th><th>Ctpid</th></tr></thead>
+        <tbody id="lijst"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="prospex-footer">
+    <span>Bron: afspraakbevestigingen van Agendabeheer. Telt op de dag dat de afspraak gemaakt is. Herplanningen (zelfde Ctpid) tellen niet opnieuw. Wordt elke 6 minuten gecontroleerd.</span>
+  </footer>
+</div>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const DAGNAAM=["ma","di","wo","do","vr"];
+const MAAND=["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
+let dagDocs={};       // datum -> [afspraken], gevuld uit DATA onderaan
+let meta=null;
+let gekozen=null;     // maandag (YYYY-MM-DD) van gekozen week
+
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);};
+const maandag=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x;};
+const plus=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+function weeknr(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const dn=(t.getUTCDay()+6)%7;t.setUTCDate(t.getUTCDate()-dn+3);const j=new Date(Date.UTC(t.getUTCFullYear(),0,4));return 1+Math.round(((t-j)/864e5-3+((j.getUTCDay()+6)%7))/7);}
+const kort=d=>d.getDate()+" "+MAAND[d.getMonth()];
+const telt=a=>a.status!=="afgekeurd";
+const vandaag=()=>iso(new Date());
+const huidigeMa=()=>iso(maandag(new Date()));
+
+function afsprakenVanWeek(ma){
+  const out=[];const m=parse(ma);
+  for(let i=0;i<5;i++){const ds=iso(plus(m,i));(dagDocs[ds]||[]).forEach(a=>out.push({...a,datum:ds}));}
+  return out;
+}
+function alleWeken(){
+  const set=new Set([huidigeMa()]);
+  Object.keys(dagDocs).forEach(ds=>set.add(iso(maandag(parse(ds)))));
+  return [...set].sort();
+}
+
+function renderWeken(){
+  const el=document.getElementById("weken");el.innerHTML="";
+  const weken=alleWeken();const nu=huidigeMa();
+  weken.forEach(ma=>{
+    const m=parse(ma);const n=afsprakenVanWeek(ma).filter(telt).length;
+    const b=document.createElement("button");b.type="button";b.className="week";
+    b.setAttribute("aria-current",ma===gekozen?"true":"false");
+    b.innerHTML=`<span class="wk">Week ${weeknr(m)}</span><span class="wn">${n}</span><span class="wd">${kort(m)} – ${kort(plus(m,4))}</span>`+(ma===nu?`<span class="nu">Lopend</span>`:"");
+    b.addEventListener("click",()=>kies(ma));
+    el.appendChild(b);
+  });
+  const act=el.querySelector('[aria-current="true"]');
+  if(act) act.scrollIntoView({block:"nearest",inline:"nearest"});
+}
+
+function renderWeek(){
+  const m=parse(gekozen);const nu=huidigeMa();const isNu=gekozen===nu;
+  const items=afsprakenVanWeek(gekozen);const geteld=items.filter(telt);
+  const vorige=afsprakenVanWeek(iso(plus(m,-7))).filter(telt).length;
+  document.getElementById("wk-eyebrow").textContent=isNu?"Deze week, lopend":"Afgesloten week";
+  document.getElementById("wk-titel").innerHTML=`Week ${weeknr(m)}: <em>${geteld.length}</em> ${geteld.length===1?"afspraak":"afspraken"}`;
+  document.getElementById("wk-sub").textContent=`${kort(m)} t/m ${kort(plus(m,4))} ${plus(m,4).getFullYear()}`;
+  document.getElementById("st-week").textContent=geteld.length;
+  document.getElementById("st-week").nextElementSibling.textContent=isNu?"deze week":"in week "+weeknr(m);
+  const vd=vandaag();const vdN=(dagDocs[vd]||[]).filter(telt).length;
+  const stV=document.getElementById("st-vandaag");
+  if(isNu){stV.textContent=vdN;document.getElementById("st-vandaag-l").textContent="vandaag";stV.parentElement.hidden=false;}
+  else{stV.parentElement.hidden=true;}
+  document.getElementById("st-vorige").textContent=vorige;
+  document.getElementById("vorige").disabled=gekozen<=alleWeken()[0];
+  document.getElementById("volgende").disabled=gekozen>=nu;
+  document.querySelector(".paneel:last-of-type h2, section.paneel h2");
+
+  // per werkdag
+  const dEl=document.getElementById("dagen");dEl.innerHTML="";
+  const perDag=[0,1,2,3,4].map(i=>{const ds=iso(plus(m,i));return {ds,lijst:(dagDocs[ds]||[]).filter(telt)};});
+  const max=Math.max(4,...perDag.map(d=>d.lijst.length));
+  perDag.forEach((d,i)=>{
+    const dm=parse(d.ds);const toek=d.ds>vd;
+    const div=document.createElement("div");div.className="dag"+(d.ds===vd?" vandaag":"")+(toek?" toekomst":"");
+    const h=d.lijst.length?Math.max(4,d.lijst.length/max*150):2;
+    div.innerHTML=`<span class="n">${toek?"–":d.lijst.length}</span><div class="bar${d.lijst.length?"":" leeg"}" style="height:${h}px"></div><span class="lbl">${DAGNAAM[i]} ${dm.getDate()}</span>`;
+    const tel={};d.lijst.forEach(a=>tel[a.klant]=(tel[a.klant]||0)+1);
+    const tipTekst=d.lijst.length?`<b>${DAGNAAM[i]} ${kort(dm)}: ${d.lijst.length}</b><br>`+Object.entries(tel).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${esc(k)} ${n}`).join("<br>"):`${DAGNAAM[i]} ${kort(dm)}: ${toek?"nog niet":"geen afspraken"}`;
+    tip(div,tipTekst);
+    dEl.appendChild(div);
+  });
+
+  // per klant
+  const kEl=document.getElementById("klanten");kEl.innerHTML="";
+  const tel={};geteld.forEach(a=>tel[a.klant]=(tel[a.klant]||0)+1);
+  const rij=Object.entries(tel).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  if(!rij.length){kEl.innerHTML=`<p class="leeg-staat">${isNu?"Nog geen nieuwe afspraken deze week. Zodra er een in de groep staat, verschijnt hij hier bij de volgende verversing.":"Geen afspraken in deze week."}</p>`;}
+  const kmax=rij.length?rij[0][1]:1;
+  rij.forEach(([k,n])=>{
+    const r=document.createElement("div");r.className="klant";
+    r.innerHTML=`<span class="naam" title="${esc(k)}">${esc(k)}</span><div class="spoor"><div class="vul" style="width:${n/kmax*100}%"></div></div><span class="aantal">${n}</span>`;
+    tip(r,`<b>${esc(k)}</b><br>${n} ${n===1?"afspraak":"afspraken"} in week ${weeknr(m)}`);
+    kEl.appendChild(r);
+  });
+
+  // per profiel
+  const pEl=document.getElementById("profielen");pEl.innerHTML="";
+  const ptel={};geteld.forEach(a=>{const k=a.profiel||"Onbekend";ptel[k]=(ptel[k]||0)+1;});
+  const prij=Object.entries(ptel).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  if(!prij.length){pEl.innerHTML=`<p class="leeg-staat">${isNu?"Nog geen afspraken deze week.":"Geen afspraken in deze week."}</p>`;}
+  const pmax=prij.length?prij[0][1]:1;
+  prij.forEach(([k,n])=>{
+    const r=document.createElement("div");r.className="klant";
+    r.innerHTML=`<span class="naam" title="${esc(k)}">${esc(k)}</span><div class="spoor"><div class="vul" style="width:${n/pmax*100}%"></div></div><span class="aantal">${n}</span>`;
+    tip(r,`<b>${esc(k)}</b><br>${n} ${n===1?"afspraak":"afspraken"} in week ${weeknr(m)}`);
+    pEl.appendChild(r);
+  });
+
+  // lijst
+  document.querySelector("section.paneel:not(.grid section) h2, #lijst").closest("section").querySelector("h2").innerHTML=isNu?"Alle afspraken <em>deze week</em>":`Alle afspraken <em>week ${weeknr(m)}</em>`;
+  const tb=document.getElementById("lijst");tb.innerHTML="";
+  const sorted=[...items].sort((a,b)=>(b.datum+b.tijd).localeCompare(a.datum+a.tijd));
+  if(!sorted.length){tb.innerHTML=`<tr><td colspan="5" class="leeg-staat">Nog niets in deze week.</td></tr>`;}
+  sorted.forEach(a=>{
+    const d=parse(a.datum);const tr=document.createElement("tr");
+    if(!telt(a)) tr.className="afgekeurd";
+    tr.innerHTML=`<td>${DAGNAAM[(d.getDay()+6)%7]} ${kort(d)}</td><td>${esc(a.tijd||"")}</td><td class="k">${esc(a.klant)}</td><td>${esc(a.profiel||"")}</td><td>${esc(a.nummer||"")}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+const tipEl=document.getElementById("tip");
+function tip(el,html){
+  el.addEventListener("mousemove",e=>{tipEl.innerHTML=html;tipEl.hidden=false;const x=Math.min(e.clientX+14,window.innerWidth-tipEl.offsetWidth-8);tipEl.style.left=x+"px";tipEl.style.top=(e.clientY+14)+"px";});
+  el.addEventListener("mouseleave",()=>{tipEl.hidden=true;});
+}
+
+function kies(ma){
+  gekozen=ma;
+  try{history.replaceState(null,"","#w"+ma.replace(/-/g,""));}catch(e){}
+  renderWeken();renderWeek();
+}
+document.getElementById("vorige").addEventListener("click",()=>{const w=alleWeken();const i=w.indexOf(gekozen);if(i>0)kies(w[i-1]);});
+document.getElementById("volgende").addEventListener("click",()=>{const w=alleWeken();const i=w.indexOf(gekozen);if(i<w.length-1)kies(w[i+1]);});
+
+function renderMeta(){
+  const el=document.getElementById("meta");
+  if(meta&&meta.laatsteRun){const [d,t]=meta.laatsteRun.split("T");el.textContent="Laatste nieuwe afspraak verwerkt "+kort(parse(d))+" om "+(t||"").slice(0,5);}
+  else el.textContent="Nog niet bijgewerkt";
+}
+
+function startWeek(){
+  const h=(location.hash||"").match(/^#w(\d{4})(\d{2})(\d{2})$/);
+  return h?`${h[1]}-${h[2]}-${h[3]}`:huidigeMa();
+}
+gekozen=startWeek();
+renderWeken();renderWeek();renderMeta();
+
+const DATA=/*DATA*/;
+dagDocs=DATA.dagen||{};meta={laatsteRun:DATA.laatsteRun};
+renderWeken();renderWeek();renderMeta();
+</script>
