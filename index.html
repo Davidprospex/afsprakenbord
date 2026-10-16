@@ -483,7 +483,7 @@ function renderWeek(){
   });
 
   // lijst
-  document.querySelector("section.paneel:not(.grid section) h2, #lijst").closest("section").querySelector("h2").innerHTML=isNu?"Alle afspraken <em>deze week</em>":`Alle afspraken <em>week ${weeknr(m)}</em>`;
+  document.getElementById("lijst-kop").innerHTML=isNu?"Alle afspraken <em>deze week</em>":`Alle afspraken <em>week ${weeknr(m)}</em>`;
   const tb=document.getElementById("lijst");tb.innerHTML="";
   const sorted=[...items].sort((a,b)=>(b.datum+b.tijd).localeCompare(a.datum+a.tijd));
   if(!sorted.length){tb.innerHTML=`<tr><td colspan="5" class="leeg-staat">Nog niets in deze week.</td></tr>`;}
