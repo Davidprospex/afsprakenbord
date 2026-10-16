@@ -13,6 +13,25 @@
 }
 html,body{background:var(--bg);}
 [hidden]{display:none!important}
+.tabs{display:flex;gap:6px;padding:4px;background:var(--vlak);border:1px solid var(--lijn);border-radius:999px;align-self:flex-start;}
+.tabs button{font:inherit;font-weight:700;font-size:.9rem;color:var(--tekst-2);background:transparent;border:0;border-radius:999px;padding:9px 20px;cursor:pointer;}
+.tabs button[aria-selected="true"]{background:var(--accent);color:#fff;}
+.tabs button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.45);}
+.views{display:flex;flex-direction:column;gap:22px;}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;}
+.kpi{display:flex;flex-direction:column;gap:6px;padding:16px 18px;background:var(--vlak);border:1px solid var(--lijn);border-radius:var(--prospex-radius);min-width:0;}
+.kpi b{font-family:var(--prospex-font-kop);font-weight:700;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1;font-variant-numeric:tabular-nums;}
+.kpi b.oranje{color:var(--accent);}
+.kpi span{font-size:.82rem;color:var(--tekst-2);}
+.wekenchart-wrap{overflow-x:auto;}
+.wekenchart{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(14px,1fr);gap:4px;align-items:end;height:200px;min-width:560px;padding-top:18px;}
+.wk-kol{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%;cursor:pointer;}
+.wk-kol .bar{width:100%;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px;}
+.wk-kol.nu .bar{background:#FF8A66;}
+.wk-kol:hover .bar{filter:brightness(1.15);}
+.wk-kol .lbl{font-size:.62rem;color:var(--tekst-3);font-variant-numeric:tabular-nums;}
+.meer{align-self:flex-start;font:inherit;font-size:.82rem;font-weight:700;color:var(--tekst);background:transparent;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;cursor:pointer;}
+.meer:hover{background:#fff;color:#000;}
 body{margin:0;}
 .wrap{box-sizing:border-box;max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:flex;flex-direction:column;gap:22px;}
 .prospex-header{flex-wrap:wrap;row-gap:8px;}
@@ -98,6 +117,12 @@ body{margin:0;}
     <div class="prospex-meta" id="meta">&nbsp;</div>
   </header>
 
+  <div class="tabs" role="tablist" aria-label="Weergave">
+    <button type="button" role="tab" id="tab-week" aria-selected="true">Per week</button>
+    <button type="button" role="tab" id="tab-totaal" aria-selected="false">Totaal</button>
+  </div>
+
+  <div id="view-week" class="views">
   <section aria-label="Weken">
     <p class="eyebrow" style="margin-bottom:10px">Alle weken, klik om te openen</p>
     <div class="weken" id="weken"></div>
@@ -146,6 +171,41 @@ body{margin:0;}
       </table>
     </div>
   </section>
+
+  </div>
+
+  <div id="view-totaal" class="views" hidden>
+    <section class="weekkop">
+      <div>
+        <span class="prospex-eyebrow">Heel 2026</span>
+        <h1 id="tot-titel">Totaal <em>afspraken</em></h1>
+        <p class="sub" id="tot-sub">&nbsp;</p>
+      </div>
+    </section>
+    <div class="kpis">
+      <div class="kpi"><b class="oranje" id="k-totaal">0</b><span>afspraken in 2026</span></div>
+      <div class="kpi"><b id="k-gem">0</b><span>gemiddeld per week</span></div>
+      <div class="kpi"><b id="k-best">0</b><span id="k-best-l">beste week</span></div>
+      <div class="kpi"><b id="k-maand">0</b><span id="k-maand-l">deze maand</span></div>
+    </div>
+    <section class="paneel">
+      <h2>Per <em>week</em></h2>
+      <div class="wekenchart-wrap"><div class="wekenchart" id="wekenchart"></div></div>
+      <p class="leeg-staat" style="font-size:.82rem">Klik op een week om die te openen.</p>
+    </section>
+    <div class="grid">
+      <section class="paneel">
+        <h2>Per <em>klant</em></h2>
+        <div class="klanten" id="tot-klanten"></div>
+        <button type="button" class="meer" id="meer-klanten" hidden>Toon alle klanten</button>
+      </section>
+      <section class="paneel">
+        <h2>Per <em>profiel</em></h2>
+        <div class="klanten" id="tot-profielen"></div>
+        <button type="button" class="meer" id="meer-profielen" hidden>Toon alle profielen</button>
+      </section>
+    </div>
+  </div>
 
   <footer class="prospex-footer">
     <span>Bron: afspraakbevestigingen van Agendabeheer. Telt op de dag dat de afspraak gemaakt is. Herplanningen (zelfde Ctpid) tellen niet opnieuw. Wordt elke 6 minuten gecontroleerd.</span>
@@ -301,4 +361,63 @@ renderWeken();renderWeek();renderMeta();
 const DATA=/*DATA*/;
 dagDocs=DATA.dagen||{};meta={laatsteRun:DATA.laatsteRun};
 renderWeken();renderWeek();renderMeta();
+
+// ---------- Totaal ----------
+let toonAlleK=false,toonAlleP=false;
+function balken(el,rij,max,suffix){
+  el.innerHTML="";
+  rij.forEach(([k,n])=>{
+    const r=document.createElement("div");r.className="klant";
+    r.innerHTML=`<span class="naam" title="${esc(k)}">${esc(k)}</span><div class="spoor"><div class="vul" style="width:${n/max*100}%"></div></div><span class="aantal">${n}</span>`;
+    tip(r,`<b>${esc(k)}</b><br>${n} ${n===1?"afspraak":"afspraken"} ${suffix}`);
+    el.appendChild(r);
+  });
+}
+function renderTotaal(){
+  const alle=[];Object.entries(dagDocs).forEach(([d,v])=>v.forEach(a=>{if(telt(a))alle.push({...a,datum:d});}));
+  const weken=alleWeken();const nu=huidigeMa();
+  const perWeek=weken.map(ma=>({ma,n:afsprakenVanWeek(ma).filter(telt).length}));
+  const af=perWeek.filter(w=>w.ma<nu);
+  const gem=af.length?Math.round(af.reduce((s,w)=>s+w.n,0)/af.length):0;
+  const best=perWeek.reduce((b,w)=>w.n>(b?b.n:-1)?w:b,null);
+  const vd=new Date();const mPref=vd.getFullYear()+"-"+pad(vd.getMonth()+1);
+  const maand=alle.filter(a=>a.datum.startsWith(mPref)).length;
+  document.getElementById("k-totaal").textContent=alle.length;
+  document.getElementById("k-gem").textContent=gem;
+  document.getElementById("k-best").textContent=best?best.n:0;
+  document.getElementById("k-best-l").textContent=best?`beste week (week ${weeknr(parse(best.ma))})`:"beste week";
+  document.getElementById("k-maand").textContent=maand;
+  document.getElementById("k-maand-l").textContent="in "+["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"][vd.getMonth()];
+  if(weken.length){const e=parse(weken[0]);document.getElementById("tot-sub").textContent=`Van week ${weeknr(e)} (${kort(e)}) tot nu, ${weken.length} weken`;}
+  const ch=document.getElementById("wekenchart");ch.innerHTML="";
+  const max=Math.max(1,...perWeek.map(w=>w.n));
+  perWeek.forEach(w=>{
+    const m=parse(w.ma);const k=document.createElement("div");k.className="wk-kol"+(w.ma===nu?" nu":"");
+    k.innerHTML=`<div class="bar" style="height:${Math.max(2,w.n/max*165)}px"></div><span class="lbl">${weeknr(m)}</span>`;
+    tip(k,`<b>Week ${weeknr(m)}: ${w.n}</b><br>${kort(m)} t/m ${kort(plus(m,4))}${w.ma===nu?"<br>lopende week":""}`);
+    k.addEventListener("click",()=>{toonTab("week");kies(w.ma);});
+    ch.appendChild(k);
+  });
+  const tk={},tp={};alle.forEach(a=>{tk[a.klant]=(tk[a.klant]||0)+1;if(a.profiel)tp[a.profiel]=(tp[a.profiel]||0)+1;});
+  const rk=Object.entries(tk).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  const rp=Object.entries(tp).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  balken(document.getElementById("tot-klanten"),toonAlleK?rk:rk.slice(0,15),rk.length?rk[0][1]:1,"in 2026");
+  balken(document.getElementById("tot-profielen"),toonAlleP?rp:rp.slice(0,15),rp.length?rp[0][1]:1,"in 2026");
+  const mk=document.getElementById("meer-klanten"),mp=document.getElementById("meer-profielen");
+  mk.hidden=rk.length<=15;mk.textContent=toonAlleK?"Toon top 15":`Toon alle ${rk.length} klanten`;
+  mp.hidden=rp.length<=15;mp.textContent=toonAlleP?"Toon top 15":`Toon alle ${rp.length} profielen`;
+}
+document.getElementById("meer-klanten").addEventListener("click",()=>{toonAlleK=!toonAlleK;renderTotaal();});
+document.getElementById("meer-profielen").addEventListener("click",()=>{toonAlleP=!toonAlleP;renderTotaal();});
+function toonTab(t){
+  const tot=t==="totaal";
+  document.getElementById("view-week").hidden=tot;document.getElementById("view-totaal").hidden=!tot;
+  document.getElementById("tab-week").setAttribute("aria-selected",String(!tot));
+  document.getElementById("tab-totaal").setAttribute("aria-selected",String(tot));
+  try{history.replaceState(null,"",tot?"#totaal":"#w"+gekozen.replace(/-/g,""));}catch(e){}
+  if(tot)renderTotaal();
+}
+document.getElementById("tab-week").addEventListener("click",()=>toonTab("week"));
+document.getElementById("tab-totaal").addEventListener("click",()=>toonTab("totaal"));
+if(location.hash==="#totaal")toonTab("totaal");
 </script>
