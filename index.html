@@ -1,4 +1,4 @@
-<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>Afsprakenbord Prospex</title>
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="300"><title>Afsprakenbord Prospex</title>
 <style>
 /* ============================================================================
    Prospex Design System v1.0 (2026-09-29)
@@ -420,7 +420,7 @@ body{margin:0;}
   </div>
 
   <footer class="prospex-footer">
-    <span>Tot en met week 41: afspraakbevestigingen van Agendabeheer, geteld op de dag dat de afspraak gemaakt is (testmails en herplanningen niet). Week 42: meldingen uit de WhatsApp-groep Prospex call 2026, tot de overstap.</span>
+    <span>Bron: afspraakbevestigingen van Agendabeheer. Telt op de dag dat de afspraak gemaakt is. Herplanningen (zelfde Ctpid) tellen niet opnieuw. Wordt elke 6 minuten gecontroleerd.</span>
   </footer>
 </div>
 </div>
@@ -546,7 +546,7 @@ document.getElementById("volgende").addEventListener("click",()=>{const w=alleWe
 
 function renderMeta(){
   const el=document.getElementById("meta");
-  if(meta&&meta.laatsteRun){const [d,t]=meta.laatsteRun.split("T");el.textContent="Bijgewerkt "+kort(parse(d))+" om "+(t||"").slice(0,5);}
+  if(meta&&meta.laatsteRun){const [d,t]=meta.laatsteRun.split("T");el.textContent="Laatste nieuwe afspraak verwerkt "+kort(parse(d))+" om "+(t||"").slice(0,5);}
   else el.textContent="Nog niet bijgewerkt";
 }
 
