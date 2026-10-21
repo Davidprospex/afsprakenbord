@@ -1,0 +1,51 @@
+name: Afsprakenbord bijwerken
+
+on:
+  schedule:
+    - cron: "*/6 * * * *"
+    - cron: "17 6 * * 1"   # maandag: "nog in leven", zodat GitHub het schema nooit pauzeert
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Alles vanaf week 41 opnieuw opbouwen (1 = ja)"
+        default: "0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: afsprakenbord
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bevestigingen ophalen en bord bouwen
+        env:
+          MS_TENANT_ID: ${{ secrets.MS_TENANT_ID }}
+          MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
+          MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
+          MAILBOX: socialassistant@prospex.nl
+          FULL: ${{ github.event.inputs.full }}
+        run: python scripts/update.py
+      - name: Opslaan als er iets veranderd is
+        run: |
+          git config user.name "Afsprakenbord"
+          git config user.email "afsprakenbord@users.noreply.github.com"
+          if [ "${{ github.event.schedule }}" = "17 6 * * 1" ]; then
+            TZ=Europe/Amsterdam date '+%Y-%m-%d %H:%M' > keepalive.txt
+            git add keepalive.txt
+          fi
+          git add data.json index.html
+          if git diff --cached --quiet; then
+            echo "Niets te publiceren."
+          else
+            git commit -m "Nieuwe afspraken $(TZ=Europe/Amsterdam date '+%Y-%m-%d %H:%M')"
+            git push
+          fi

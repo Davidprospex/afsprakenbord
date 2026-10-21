@@ -10,6 +10,7 @@ Omgeving: MS_TENANT_ID, MS_CLIENT_ID, MS_CLIENT_SECRET, MAILBOX (standaard socia
 Optioneel: FULL=1 om alles vanaf START opnieuw op te bouwen.
 """
 import datetime as dt
+import hashlib
 import html
 import json
 import os
@@ -19,10 +20,12 @@ import urllib.parse
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-START = "2026-10-05"  # week 41: begin van het bord
+START = "2026-01-01"  # begin van het bord
 LOOKBACK_DAYS = 3     # normale run: alleen recente mail ophalen en samenvoegen
 
-# Klantnamen zoals ze op het bord moeten staan (sleutel = eerste deel van Campagne, kleine letters).
+# Klantnamen zoals ze op het bord moeten staan.
+KANON = ["Prospex", "Marcus", "Mfactor", "Lyreco", "Prostrive", "Nowy Styl", "Personeelsadviseur", "Novar",
+         "Hovingh", "Riff", "Thorlux", "OnItNow", "RBBLS", "SGS", "QRC", "Solite", "Touch", "Verdi", "Axelio"]
 ALIASES = {
     "prospex marketing": "Prospex",
     "touch incentive": "Touch",
@@ -30,10 +33,10 @@ ALIASES = {
     "de virtuele personeelsadviseur": "Personeelsadviseur",
     "hovingh & partners": "Hovingh",
     "qrc security": "QRC",
-    "riff": "Riff",
-    "rbbls": "RBBLS",
     "nowystyl": "Nowy Styl",
+    "m factor": "Mfactor",
 }
+KANON_L = {k.lower(): k for k in KANON}
 
 SUBJECT_RE = re.compile(r"^\s*(Afspraakbevestiging|Appointment confirmation)\b", re.I)
 STAMP_RE = re.compile(r"(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})(?::\d{2})?")
@@ -54,8 +57,10 @@ def field(text, *names):
 
 
 def klant_uit_campagne(campagne):
-    deel = campagne.split(" - ")[0].strip()
-    return ALIASES.get(deel.lower(), deel)
+    deel = campagne.split(" - ")[0].strip().lstrip("[").strip()
+    deel = re.sub(r"\s*\b20\d\d\b\s*$", "", deel).strip().rstrip("-").strip()
+    l = deel.lower()
+    return ALIASES.get(l) or KANON_L.get(l) or deel
 
 
 def profiel_uit_project(project, afspraak_voor):
@@ -89,6 +94,8 @@ def parse(msg):
     project = field(text, "Project")
     if not campagne:
         return None
+    if re.search(r"\btest\b|test-", project + " " + (msg.get("subject") or ""), re.I):
+        return None  # testbevestigingen
     gemaakt = gemaakt_op(text, msg["receivedDateTime"])
     dag = gemaakt.date()
     if dag.weekday() >= 5:  # weekend telt op de maandag erna
@@ -101,6 +108,8 @@ def parse(msg):
         "profiel": profiel_uit_project(project, field(text, "Afspraak voor", "Appointment for")),
         "nummer": field(text, "Ctpid"),
         "status": "telt",
+        # vingerafdruk van het onderwerp (bevat de prospectnaam, die slaan we niet leesbaar op)
+        "onderwerp": hashlib.sha1(re.sub(r"\s+", " ", msg.get("subject") or "").strip().lower().encode()).hexdigest()[:12],
     }
 
 
@@ -143,9 +152,13 @@ def main():
     full = data["dagen"] == {}
     since = START if full else (dt.date.today() - dt.timedelta(days=LOOKBACK_DAYS)).isoformat()
 
-    alle = [a for dag in data["dagen"].values() for a in dag]
+    alle = [dict(a, datum=d) for d, dag in data["dagen"].items() for a in dag]
     ids = {a["id"] for a in alle}
     sleutels = {(a["klant"], a["nummer"]) for a in alle if a["nummer"]}
+    gezien = {}
+    for a in alle:
+        if a.get("onderwerp"):
+            gezien[a["onderwerp"]] = max(gezien.get(a["onderwerp"], a["datum"]), a["datum"])
     nieuw = 0
     for msg in fetch(since + "T00:00:00Z"):
         a = parse(msg)
@@ -153,6 +166,10 @@ def main():
             continue
         if a["nummer"] and (a["klant"], a["nummer"]) in sleutels:
             continue  # zelfde Ctpid voor dezelfde klant: herplanning of dubbele mail
+        vorige = gezien.get(a["onderwerp"])
+        if vorige and (dt.date.fromisoformat(a["datum"]) - dt.date.fromisoformat(vorige)).days <= 14:
+            continue  # zelfde bevestiging opnieuw verstuurd
+        gezien[a["onderwerp"]] = a["datum"]
         dag = a.pop("datum")
         data["dagen"].setdefault(dag, []).append(a)
         ids.add(a["id"])
