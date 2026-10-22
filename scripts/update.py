@@ -166,6 +166,15 @@ def main():
         a = parse(msg)
         if not a:
             telling["geen bevestiging"] += 1
+            if telling["geen bevestiging"] <= 3:
+                subj = msg.get("subject") or ""
+                body = (msg.get("body") or {})
+                text = body_text(body.get("content", ""))
+                print("DEBUG", {"onderwerp_ok": bool(SUBJECT_RE.match(subj)), "begint_met": subj[:22],
+                                "body_type": body.get("contentType"), "body_lengte": len(body.get("content", "")),
+                                "resultaatcode": field(text, "Resultaatcode", "Resultcode")[:30],
+                                "campagne_gevonden": bool(field(text, "Campagne", "Campaign")),
+                                "regels": text.count("\n")})
             continue
         if a["id"] in ids or a["datum"] < START:
             telling["al op bord"] += 1
