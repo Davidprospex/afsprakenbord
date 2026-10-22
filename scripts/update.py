@@ -43,9 +43,10 @@ STAMP_RE = re.compile(r"(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})(?::\d{2})?")
 
 
 def body_text(html_body):
-    t = re.sub(r"(?i)<br\s*/?>|</(p|div|tr|td)>|<hr\s*/?>", "\n", html_body or "")
+    # Regeleinde bij elke br/hr en elk blok-element, ook als er attributen in de tag staan (zoals bij Microsoft Graph).
+    t = re.sub(r"(?i)<br[^>]*>|<hr[^>]*>|</?(p|div|tr|td|table|tbody)[^>]*>", "\n", html_body or "")
     t = re.sub(r"<[^>]+>", "", t)
-    return html.unescape(t)
+    return html.unescape(t).replace("\xa0", " ")
 
 
 def field(text, *names):
@@ -154,7 +155,12 @@ def main():
 
     alle = [dict(a, datum=d) for d, dag in data["dagen"].items() for a in dag]
     ids = {a["id"] for a in alle}
-    sleutels = {(a["klant"], a["nummer"]) for a in alle if a["nummer"]}
+    # Ctpid per klant met laatste datum: zelfde Ctpid binnen 30 dagen = herplanning of al geteld (ook via WhatsApp).
+    sleutels = {}
+    for a in alle:
+        if a["nummer"]:
+            k = (a["klant"], a["nummer"])
+            sleutels[k] = max(sleutels.get(k, a["datum"]), a["datum"])
     gezien = {}
     for a in alle:
         if a.get("onderwerp"):
@@ -166,23 +172,12 @@ def main():
         a = parse(msg)
         if not a:
             telling["geen bevestiging"] += 1
-            subj = msg.get("subject") or ""
-            if SUBJECT_RE.match(subj) and telling.setdefault("bevestiging afgekeurd", 0) < 3:
-                telling["bevestiging afgekeurd"] += 1
-                body = (msg.get("body") or {})
-                text = body_text(body.get("content", ""))
-                print("DEBUG", {"onderwerp_ok": bool(SUBJECT_RE.match(subj)), "begint_met": subj[:22],
-                                "body_type": body.get("contentType"), "body_lengte": len(body.get("content", "")),
-                                "resultaatcode": field(text, "Resultaatcode", "Resultcode")[:30],
-                                "campagne_gevonden": bool(field(text, "Campagne", "Campaign")),
-                                "regels": text.count("\n"),
-                                "rc_regel": [l[:40] for l in text.splitlines() if "esult" in l][:2],
-                                "ruw_rond_rc": body.get("content", "")[body.get("content", "").find("esultaat")-60:body.get("content", "").find("esultaat")+40] if "esultaat" in body.get("content", "") else "geen"})
             continue
         if a["id"] in ids or a["datum"] < START:
             telling["al op bord"] += 1
             continue
-        if a["nummer"] and (a["klant"], a["nummer"]) in sleutels:
+        vorig = sleutels.get((a["klant"], a["nummer"])) if a["nummer"] else None
+        if vorig and abs((dt.date.fromisoformat(a["datum"]) - dt.date.fromisoformat(vorig)).days) <= 30:
             telling["zelfde ctpid"] += 1
             continue  # zelfde Ctpid voor dezelfde klant: herplanning of dubbele mail
         vorige = gezien.get(a["onderwerp"])
@@ -194,7 +189,7 @@ def main():
         data["dagen"].setdefault(dag, []).append(a)
         ids.add(a["id"])
         if a["nummer"]:
-            sleutels.add((a["klant"], a["nummer"]))
+            sleutels[(a["klant"], a["nummer"])] = dag
         nieuw += 1
     for dag in data["dagen"].values():
         dag.sort(key=lambda a: a["tijd"])
