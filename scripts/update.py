@@ -160,14 +160,22 @@ def main():
         if a.get("onderwerp"):
             gezien[a["onderwerp"]] = max(gezien.get(a["onderwerp"], a["datum"]), a["datum"])
     nieuw = 0
+    telling = {"opgehaald": 0, "geen bevestiging": 0, "al op bord": 0, "zelfde ctpid": 0, "zelfde onderwerp": 0}
     for msg in fetch(since + "T00:00:00Z"):
+        telling["opgehaald"] += 1
         a = parse(msg)
-        if not a or a["id"] in ids or a["datum"] < START:
+        if not a:
+            telling["geen bevestiging"] += 1
+            continue
+        if a["id"] in ids or a["datum"] < START:
+            telling["al op bord"] += 1
             continue
         if a["nummer"] and (a["klant"], a["nummer"]) in sleutels:
+            telling["zelfde ctpid"] += 1
             continue  # zelfde Ctpid voor dezelfde klant: herplanning of dubbele mail
         vorige = gezien.get(a["onderwerp"])
         if vorige and (dt.date.fromisoformat(a["datum"]) - dt.date.fromisoformat(vorige)).days <= 14:
+            telling["zelfde onderwerp"] += 1
             continue  # zelfde bevestiging opnieuw verstuurd
         gezien[a["onderwerp"]] = a["datum"]
         dag = a.pop("datum")
@@ -180,6 +188,7 @@ def main():
         dag.sort(key=lambda a: a["tijd"])
     data["dagen"] = dict(sorted(data["dagen"].items()))
 
+    print(f"Sinds {since}: {telling}, nieuw: {nieuw}")
     changed = nieuw > 0 or full or "laatsteRun" not in data
     if not changed:
         print("Geen nieuwe afspraken.")
