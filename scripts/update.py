@@ -35,6 +35,7 @@ ALIASES = {
     "qrc security": "QRC",
     "nowystyl": "Nowy Styl",
     "m factor": "Mfactor",
+    "verdi groep": "Verdi",
 }
 KANON_L = {k.lower(): k for k in KANON}
 
