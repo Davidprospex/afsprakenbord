@@ -92,6 +92,8 @@ def parse(msg):
     code = field(text, "Resultaatcode", "Resultcode")
     if not re.match(r"(?i)^(afspraak|appointment)", code):
         return None
+    if re.search(r"(?i)opnieuw|herplan|verzet|verplaatst|resched", code):
+        return None  # herplanning (bijv. "Afspraak opnieuw ingepland") telt niet als nieuwe afspraak
     campagne = field(text, "Campagne", "Campaign")
     project = field(text, "Project")
     if not campagne:
