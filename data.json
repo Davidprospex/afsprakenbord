@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-21T18:34",
+ "laatsteRun": "2026-10-22T16:07",
  "dagen": {
   "2026-01-06": [
    {
@@ -8378,6 +8378,15 @@
   ],
   "2026-10-21": [
    {
+    "id": "<9618daf0-906b-4a54-bcfc-9758f2342737@prospex.nl>",
+    "tijd": "09:46",
+    "klant": "Thorlux",
+    "profiel": "Bram Dieltjens",
+    "nummer": "1872",
+    "status": "telt",
+    "onderwerp": "2f3f541352f9"
+   },
+   {
     "id": "115460",
     "tijd": "09:51",
     "klant": "Riff",
@@ -8453,6 +8462,62 @@
     "klant": "OnItNow",
     "nummer": "454",
     "status": "telt"
+   }
+  ],
+  "2026-10-22": [
+   {
+    "id": "<8d15d826-f7fc-4cf9-9961-ac9e43f13d79@prospex.nl>",
+    "tijd": "10:40",
+    "klant": "Riff",
+    "profiel": "Tobias Walraven",
+    "nummer": "1563",
+    "status": "telt",
+    "onderwerp": "e29b149db0a3"
+   },
+   {
+    "id": "<855e8165-7258-46a5-b9c9-e83d8c461463@prospex.nl>",
+    "tijd": "11:28",
+    "klant": "RBBLS",
+    "profiel": "Sjoerd Verbeek",
+    "nummer": "335",
+    "status": "telt",
+    "onderwerp": "7729a076eb98"
+   },
+   {
+    "id": "<08dda40e-0b2d-4836-970c-b74e5c99b3a0@prospex.nl>",
+    "tijd": "13:56",
+    "klant": "Verdi Groep",
+    "profiel": "Nathalie de Jager",
+    "nummer": "926",
+    "status": "telt",
+    "onderwerp": "2d80164968bc"
+   },
+   {
+    "id": "<1ade9c01-48e3-47e6-8302-f16d9477b223@prospex.nl>",
+    "tijd": "14:45",
+    "klant": "Thorlux",
+    "profiel": "Bram Dieltjens",
+    "nummer": "2579",
+    "status": "telt",
+    "onderwerp": "c84a9693a39c"
+   },
+   {
+    "id": "<ace4da7e-d175-4751-a27b-cddcc126d359@prospex.nl>",
+    "tijd": "15:00",
+    "klant": "Hovingh",
+    "profiel": "Wilfred",
+    "nummer": "648",
+    "status": "telt",
+    "onderwerp": "438fab992a7e"
+   },
+   {
+    "id": "<470f10c1-cbe3-4655-b091-5d244060952e@prospex.nl>",
+    "tijd": "15:04",
+    "klant": "Hovingh",
+    "profiel": "Wilfred",
+    "nummer": "590",
+    "status": "telt",
+    "onderwerp": "ec73ac9ee988"
    }
   ]
  }
