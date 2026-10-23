@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-23T13:11",
+ "laatsteRun": "2026-10-23T15:33",
  "dagen": {
   "2026-01-06": [
    {
@@ -8529,6 +8529,33 @@
     "nummer": "664",
     "status": "telt",
     "onderwerp": "8b4e6f21ebf7"
+   },
+   {
+    "id": "<610cf467-4159-4147-97e3-30030a8c3a7c@prospex.nl>",
+    "tijd": "13:34",
+    "klant": "Prospex",
+    "profiel": "Pim",
+    "nummer": "2795",
+    "status": "telt",
+    "onderwerp": "5ffa094430d5"
+   },
+   {
+    "id": "<718c88a3-6cd0-4c87-a890-52a4a3655df4@prospex.nl>",
+    "tijd": "13:41",
+    "klant": "QRC",
+    "profiel": "Sabine van Amstel",
+    "nummer": "700",
+    "status": "telt",
+    "onderwerp": "f5e8566260c7"
+   },
+   {
+    "id": "<d4df87be-f232-471e-b513-bcaa1885080f@prospex.nl>",
+    "tijd": "13:52",
+    "klant": "Prospex",
+    "profiel": "Pim",
+    "nummer": "2796",
+    "status": "telt",
+    "onderwerp": "91adab7b48ba"
    }
   ]
  }
