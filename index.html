@@ -221,7 +221,10 @@ html,body{background:var(--bg);}
 .live-kop{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 24px;flex-wrap:wrap;}
 .live-kop h1{margin:0;font-size:clamp(1.1rem,2.6vh,2rem);}
 .live-kop .prospex-eyebrow{margin-bottom:.3rem;}
-.live-stats{display:flex;gap:28px;}
+.live-stats{display:flex;gap:28px;align-items:center;}
+.geluid{font:inherit;font-weight:700;font-size:.85rem;color:var(--tekst);background:transparent;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:8px 16px;cursor:pointer;}
+.geluid.aan{border-color:var(--goed,#3FD6D6);color:#3FD6D6;}
+.geluid:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.45);}
 .live-stats b{font-family:var(--prospex-font-kop);font-weight:700;font-size:clamp(1.6rem,4.5vh,3.2rem);line-height:1;font-variant-numeric:tabular-nums;}
 .live-stats b.oranje{color:var(--accent);}
 .live-stats span{font-size:.8rem;color:var(--tekst-2);}
@@ -437,7 +440,7 @@ body{margin:0;}
   <div id="view-live" class="views" hidden>
     <div class="live-kop">
       <div><span class="prospex-eyebrow" id="live-eyebrow">Live bord</span><h1>Afspraak <em>gemaakt?</em> Druk op plus</h1></div>
-      <div class="live-stats"><div class="stat"><b class="oranje" id="live-totaal">0</b><span>deze week</span></div><div class="stat"><b id="live-vandaag">0</b><span>vandaag</span></div></div>
+      <div class="live-stats"><button type="button" class="geluid" id="geluid-aan">Geluid aan</button><div class="stat"><b class="oranje" id="live-totaal">0</b><span>deze week</span></div><div class="stat"><b id="live-vandaag">0</b><span>vandaag</span></div></div>
     </div>
     <div class="live-grid" id="live-grid"></div>
   </div>
@@ -762,6 +765,19 @@ function feest(k){
   const ps=Array.from({length:160},()=>({x:cv.width/2+(Math.random()-.5)*120,y:cv.height*.38,vx:(Math.random()-.5)*16,vy:-Math.random()*16-4,r:Math.random()*6+4,c:kleuren[Math.floor(Math.random()*kleuren.length)],a:Math.random()*6}));
   let f=0;(function stap(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.vy+=.45;p.x+=p.vx;p.y+=p.vy;p.a+=.2;cx.save();cx.translate(p.x,p.y);cx.rotate(p.a);cx.fillStyle=p.c;cx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);cx.restore();});f++;if(f<120)requestAnimationFrame(stap);else cx.clearRect(0,0,cv.width,cv.height);})();
 }
+
+// Live tussen tabbladen en vensters op hetzelfde apparaat: reageer op wijzigingen van een ander tabblad.
+window.addEventListener("storage",e=>{
+  if(e.key!==LIVE_KEY)return;
+  let oud={},nieuw={};try{oud=(JSON.parse(e.oldValue||"{}").tel)||{};nieuw=(JSON.parse(e.newValue||"{}").tel)||{};}catch(x){}
+  const erbij=Object.keys(nieuw).find(k=>(nieuw[k]||0)>(oud[k]||0));
+  if(!document.getElementById("view-live").hidden)renderLive(erbij||null);
+  if(erbij)feest(erbij);
+});
+document.getElementById("geluid-aan").addEventListener("click",e=>{
+  try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();}catch(x){}
+  e.currentTarget.classList.add("aan");e.currentTarget.textContent="Geluid staat aan";
+});
 // ---------- Totaal ----------
 let toonAlleK=false,toonAlleP=false;
 function balken(el,rij,max,suffix){
