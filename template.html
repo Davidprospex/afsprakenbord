@@ -570,7 +570,7 @@ function renderLive(flitsKlant){
     r.querySelector(".min").addEventListener("click",()=>livePlus(k,-1));
     g.appendChild(r);
   });
-  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+  if(flitsKlant!==undefined&&!matchMedia("(prefers-reduced-motion: reduce)").matches){
     g.querySelectorAll(".live-rij").forEach(r=>{const o=oud[r.dataset.k];if(!o)return;const nw=r.getBoundingClientRect();const dx=o.left-nw.left,dy=o.top-nw.top;
       if(dx||dy){r.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],{duration:650,easing:"cubic-bezier(.2,1,.3,1)"});}});
   }
