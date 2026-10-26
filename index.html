@@ -734,6 +734,7 @@ function livePlus(k,d){
   Object.keys(v.vandaag).forEach(x=>{if(x!==vd)delete v.vandaag[x];});
   liveBewaar(v);renderLive(d>0?k:null);
   if(d>0)feest(k);
+  if(typeof relaySend==="function"){const eid=MIJN_ID+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,6);eidGezien(eid,true);relaySend({type:"delta",k:k,d:d,eid:eid});if(isBord())stuurStand();}
 }
 let audioCtx=null;
 function juichGeluid(){
@@ -776,8 +777,38 @@ window.addEventListener("storage",e=>{
 });
 document.getElementById("geluid-aan").addEventListener("click",e=>{
   try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();}catch(x){}
-  e.currentTarget.classList.add("aan");e.currentTarget.textContent="Geluid staat aan";
+  e.currentTarget.classList.add("aan");e.currentTarget.textContent="Dit is het bord, geluid aan";
+  try{localStorage.setItem("afsprakenbord-isbord","1");}catch(x){}
+  if(typeof stuurStand==="function")stuurStand();
 });
+
+// ---------- Live tussen apparaten via ntfy.sh (alleen klantnaam en +1/-1, geen persoonsgegevens) ----------
+const RELAY="https://ntfy.sh/prospex-afsprakenbord-ffb9535c0211e74c8e65acc0";
+const MIJN_ID=Math.random().toString(36).slice(2,10);
+const isBord=()=>{try{return localStorage.getItem("afsprakenbord-isbord")==="1";}catch(e){return false;}};
+function relaySend(obj){try{fetch(RELAY,{method:"POST",body:JSON.stringify({...obj,from:MIJN_ID,w:liveWeek()})}).catch(()=>{});}catch(e){}}
+function stuurStand(){const v=liveLaad();relaySend({type:"stand",tel:v.tel,vandaag:v.vandaag});}
+function pasToe(k,d){const v=liveLaad();const vd=vandaag();const nu=(v.tel[k]||0)+d;if(nu<0)return false;
+  v.tel[k]=nu;v.vandaag[vd]=Math.max(0,(v.vandaag[vd]||0)+d);Object.keys(v.vandaag).forEach(x=>{if(x!==vd)delete v.vandaag[x];});liveBewaar(v);return true;}
+function eidGezien(eid,markeer){try{const l=JSON.parse(localStorage.getItem("afsprakenbord-eids")||"[]");if(l.includes(eid))return true;if(markeer){l.push(eid);localStorage.setItem("afsprakenbord-eids",JSON.stringify(l.slice(-80)));}}catch(e){}return false;}
+function liveZichtbaar(){return !document.getElementById("view-live").hidden;}
+try{
+  const es=new EventSource(RELAY+"/sse");
+  es.onopen=()=>{if(!isBord())relaySend({type:"vraag"});};
+  es.onmessage=ev=>{
+    let m;try{m=JSON.parse(JSON.parse(ev.data).message);}catch(e){return;}
+    if(!m||m.from===MIJN_ID||m.w!==liveWeek())return;
+    if(m.type==="delta"){
+      if(eidGezien(m.eid,true))return;  // al verwerkt (bijv. door een ander tabblad op dit apparaat)
+      if(!pasToe(m.k,m.d))return;
+      if(liveZichtbaar())renderLive(m.d>0?m.k:null);
+      if(m.d>0)feest(m.k);
+      if(isBord())stuurStand();
+    }else if(m.type==="stand"&&!isBord()){
+      const v=liveLaad();v.tel=m.tel||{};v.vandaag=m.vandaag||{};liveBewaar(v);if(liveZichtbaar())renderLive();
+    }else if(m.type==="vraag"&&isBord()){stuurStand();}
+  };
+}catch(e){}
 // ---------- Totaal ----------
 let toonAlleK=false,toonAlleP=false;
 function balken(el,rij,max,suffix){
