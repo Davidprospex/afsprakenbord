@@ -218,6 +218,24 @@ html,body{background:var(--bg);}
 .vg .cijfers b{font-family:var(--prospex-font-kop);font-size:.95rem;}
 .vg .cijfers span{color:var(--tekst-3);display:block;}
 .plus{color:#3FD6D6;} .min{color:#FF5CC0;}
+.live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+.live-kaart{display:flex;flex-direction:column;gap:12px;padding:18px;background:var(--vlak);border:1px solid var(--lijn);border-radius:var(--prospex-radius);min-width:0;transition:border-color .3s,box-shadow .3s;}
+.live-kaart.flits{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,74,24,.35),0 12px 40px rgba(255,74,24,.35);}
+.live-kaart .naam{font-family:var(--prospex-font-kop);font-weight:700;font-size:1.05rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.live-rij{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.live-n{font-family:var(--prospex-font-kop);font-weight:700;font-size:2.8rem;line-height:1;font-variant-numeric:tabular-nums;}
+.live-n.nul{color:var(--tekst-3);}
+.live-knoppen{display:flex;gap:8px;}
+.live-knoppen button{font:inherit;font-weight:700;width:52px;height:52px;border-radius:50%;cursor:pointer;font-size:1.6rem;line-height:1;display:grid;place-content:center;}
+.live-knoppen .plus{background:var(--accent);color:#fff;border:0;width:64px;height:64px;font-size:2rem;}
+.live-knoppen .plus:active{transform:scale(.94);}
+.live-knoppen .min{background:transparent;color:var(--tekst-2);border:1.5px solid var(--lijn);}
+.live-knoppen button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,74,24,.45);}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:50;}
+.juich{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%) scale(.6);font-family:var(--prospex-font-kop);font-weight:700;font-size:clamp(2.4rem,8vw,6rem);color:#fff;text-shadow:0 8px 40px rgba(255,74,24,.8);opacity:0;pointer-events:none;z-index:51;text-align:center;transition:opacity .25s,transform .35s cubic-bezier(.2,1.4,.4,1);}
+.juich.aan{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.juich small{display:block;font-size:.35em;color:var(--accent);margin-top:.3em;}
+@media (prefers-reduced-motion:reduce){.juich{transition:none;}}
 .meer{align-self:flex-start;font:inherit;font-size:.82rem;font-weight:700;color:var(--tekst);background:transparent;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;cursor:pointer;}
 .meer:hover{background:#fff;color:#000;}
 body{margin:0;}
@@ -309,6 +327,7 @@ body{margin:0;}
     <button type="button" role="tab" id="tab-week" aria-selected="true">Per week</button>
     <button type="button" role="tab" id="tab-maand" aria-selected="false">Per maand</button>
     <button type="button" role="tab" id="tab-totaal" aria-selected="false">Totaal</button>
+    <button type="button" role="tab" id="tab-live" aria-selected="false">Live</button>
   </div>
 
   <div id="view-week" class="views">
@@ -393,6 +412,21 @@ body{margin:0;}
     </section>
   </div>
 
+  <div id="view-live" class="views" hidden>
+    <section class="weekkop">
+      <div>
+        <span class="prospex-eyebrow" id="live-eyebrow">Live bord</span>
+        <h1>Afspraak <em>gemaakt?</em> Druk op plus</h1>
+        <p class="sub">Telt alleen op dit scherm. Wordt elke maandag automatisch leeg. Staat los van de bevestigde cijfers uit de mail.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b class="oranje" id="live-totaal">0</b><span>deze week</span></div>
+        <div class="stat"><b id="live-vandaag">0</b><span>vandaag</span></div>
+      </div>
+    </section>
+    <div class="live-grid" id="live-grid"></div>
+  </div>
+
   <div id="view-totaal" class="views" hidden>
     <section class="weekkop">
       <div>
@@ -425,6 +459,8 @@ body{margin:0;}
 </div>
 </div>
 <div class="tip" id="tip" hidden></div>
+<canvas id="confetti"></canvas>
+<div class="juich" id="juich">Afspraak!<small id="juich-klant"></small></div>
 
 <script>
 const DAGNAAM=["ma","di","wo","do","vr"];
@@ -633,6 +669,73 @@ function renderMaand(){
   const mv=document.getElementById("meer-vergelijk");mv.hidden=namen.length<=15;mv.textContent=toonAlleV?"Toon top 15":`Toon alle ${namen.length} klanten`;
 }
 document.getElementById("meer-vergelijk").addEventListener("click",()=>{toonAlleV=!toonAlleV;renderMaand();});
+
+// ---------- Live bord (alleen dit scherm, elke maandag leeg) ----------
+const LIVE_KEY="afsprakenbord-live";
+function liveWeek(){return huidigeMa();}
+function liveLaad(){try{const v=JSON.parse(localStorage.getItem(LIVE_KEY)||"{}");if(v.week===liveWeek())return v;}catch(e){}return {week:liveWeek(),tel:{},vandaag:{}};}
+function liveBewaar(v){try{localStorage.setItem(LIVE_KEY,JSON.stringify(v));}catch(e){}}
+function liveKlanten(){
+  // lopende klanten: bevestigde afspraak in de laatste 8 weken (uit de maildata)
+  const grens=iso(plus(new Date(),-56));const set=new Set();
+  Object.entries(dagDocs).forEach(([d,v])=>{if(d>=grens)v.forEach(a=>{if(telt(a))set.add(a.klant);});});
+  return [...set].sort((a,b)=>a.localeCompare(b));
+}
+function renderLive(flitsKlant){
+  const v=liveLaad();const vd=vandaag();
+  const tot=Object.values(v.tel).reduce((a,b)=>a+b,0);
+  const vdn=Object.entries(v.vandaag).filter(([k])=>k===vd).reduce((a,[,n])=>a+n,0);
+  document.getElementById("live-totaal").textContent=tot;
+  document.getElementById("live-vandaag").textContent=vdn;
+  const m=parse(liveWeek());document.getElementById("live-eyebrow").textContent=`Live bord, week ${weeknr(m)}`;
+  const g=document.getElementById("live-grid");g.innerHTML="";
+  liveKlanten().forEach(k=>{
+    const n=v.tel[k]||0;const c=document.createElement("div");c.className="live-kaart"+(k===flitsKlant?" flits":"");
+    c.innerHTML=`<span class="naam" title="${esc(k)}">${esc(k)}</span><div class="live-rij"><span class="live-n${n?"":" nul"}">${n}</span><div class="live-knoppen"><button type="button" class="min" aria-label="Eén afspraak eraf bij ${esc(k)}">&minus;</button><button type="button" class="plus" aria-label="Afspraak erbij voor ${esc(k)}">+</button></div></div>`;
+    c.querySelector(".plus").addEventListener("click",()=>livePlus(k,1));
+    c.querySelector(".min").addEventListener("click",()=>livePlus(k,-1));
+    g.appendChild(c);
+  });
+  if(flitsKlant)setTimeout(()=>{const f=g.querySelector(".flits");if(f)f.classList.remove("flits");},1600);
+}
+function livePlus(k,d){
+  const v=liveLaad();const vd=vandaag();
+  const nu=(v.tel[k]||0)+d;if(nu<0)return;
+  v.tel[k]=nu;v.vandaag[vd]=Math.max(0,(v.vandaag[vd]||0)+d);
+  Object.keys(v.vandaag).forEach(x=>{if(x!==vd)delete v.vandaag[x];});
+  liveBewaar(v);renderLive(d>0?k:null);
+  if(d>0)feest(k);
+}
+let audioCtx=null;
+function juichGeluid(){
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const ctx=audioCtx,t0=ctx.currentTime;
+    // fanfare
+    [[523.25,0],[659.25,.12],[783.99,.24],[1046.5,.36]].forEach(([f,t],i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();o.type="sawtooth";o.frequency.value=f;
+      const lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=2600;
+      const dur=i===3?.9:.16;g.gain.setValueAtTime(0,t0+t);g.gain.linearRampToValueAtTime(.18,t0+t+.02);g.gain.exponentialRampToValueAtTime(.001,t0+t+dur);
+      o.connect(lp).connect(g).connect(ctx.destination);o.start(t0+t);o.stop(t0+t+dur+.05);
+    });
+    // applaus/gejuich: gefilterde ruis in korte klapjes
+    const len=ctx.sampleRate*2.4,buf=ctx.createBuffer(1,len,ctx.sampleRate),dat=buf.getChannelData(0);
+    for(let i=0;i<len;i++){const tt=i/ctx.sampleRate;const klap=Math.random()<.0009?1:0;dat[i]=(Math.random()*2-1)*(0.35+0.65*Math.abs(Math.sin(tt*37+Math.sin(tt*11))))*(klap?3:1);}
+    const src=ctx.createBufferSource();src.buffer=buf;const bp=ctx.createBiquadFilter();bp.type="bandpass";bp.frequency.value=1800;bp.Q.value=.6;
+    const gn=ctx.createGain();gn.gain.setValueAtTime(0,t0+.3);gn.gain.linearRampToValueAtTime(.35,t0+.6);gn.gain.setValueAtTime(.35,t0+1.8);gn.gain.exponentialRampToValueAtTime(.001,t0+2.7);
+    src.connect(bp).connect(gn).connect(ctx.destination);src.start(t0+.3);
+  }catch(e){}
+}
+function feest(k){
+  juichGeluid();
+  const j=document.getElementById("juich");document.getElementById("juich-klant").textContent=k;
+  j.classList.add("aan");clearTimeout(j._t);j._t=setTimeout(()=>j.classList.remove("aan"),1900);
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const cv=document.getElementById("confetti"),cx=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;
+  const kleuren=["#FF4A18","#FF8A66","#FFFFFF","#FAD8B1","#FFD83D"];
+  const ps=Array.from({length:160},()=>({x:cv.width/2+(Math.random()-.5)*120,y:cv.height*.38,vx:(Math.random()-.5)*16,vy:-Math.random()*16-4,r:Math.random()*6+4,c:kleuren[Math.floor(Math.random()*kleuren.length)],a:Math.random()*6}));
+  let f=0;(function stap(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.vy+=.45;p.x+=p.vx;p.y+=p.vy;p.a+=.2;cx.save();cx.translate(p.x,p.y);cx.rotate(p.a);cx.fillStyle=p.c;cx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);cx.restore();});f++;if(f<120)requestAnimationFrame(stap);else cx.clearRect(0,0,cv.width,cv.height);})();
+}
 // ---------- Totaal ----------
 let toonAlleK=false,toonAlleP=false;
 function balken(el,rij,max,suffix){
@@ -677,13 +780,15 @@ function renderTotaal(){
 }
 document.getElementById("meer-klanten").addEventListener("click",()=>{toonAlleK=!toonAlleK;renderTotaal();});
 function toonTab(t){
-  ["week","maand","totaal"].forEach(x=>{document.getElementById("view-"+x).hidden=x!==t;document.getElementById("tab-"+x).setAttribute("aria-selected",String(x===t));});
+  ["week","maand","totaal","live"].forEach(x=>{document.getElementById("view-"+x).hidden=x!==t;document.getElementById("tab-"+x).setAttribute("aria-selected",String(x===t));});
   try{history.replaceState(null,"",t==="week"?"#w"+gekozen.replace(/-/g,""):"#"+t);}catch(e){}
   if(t==="totaal")renderTotaal();
   if(t==="maand")renderMaand();
+  if(t==="live")renderLive();
 }
-["week","maand","totaal"].forEach(x=>document.getElementById("tab-"+x).addEventListener("click",()=>toonTab(x)));
+["week","maand","totaal","live"].forEach(x=>document.getElementById("tab-"+x).addEventListener("click",()=>toonTab(x)));
 if(location.hash==="#totaal")toonTab("totaal");
 if(location.hash==="#maand")toonTab("maand");
+if(location.hash==="#live")toonTab("live");
 </script>
 </body></html>
