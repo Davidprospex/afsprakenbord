@@ -42,7 +42,7 @@ jobs:
             TZ=Europe/Amsterdam date '+%Y-%m-%d %H:%M' > keepalive.txt
             git add keepalive.txt
           fi
-          git add data.json index.html live.json 2>/dev/null || git add data.json index.html
+          git add data.json index.html live.json klanten.json 2>/dev/null || git add data.json index.html
           if git diff --cached --quiet; then
             echo "Niets te publiceren."
           else

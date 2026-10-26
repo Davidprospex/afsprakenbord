@@ -97,6 +97,29 @@ body.live-modus .live-grid{flex:1;min-height:0;}
 .juich.aan{opacity:1;transform:translate(-50%,-50%) scale(1);}
 .juich small{display:block;font-size:.35em;color:var(--accent);margin-top:.3em;}
 @media (prefers-reduced-motion:reduce){.juich{transition:none;}}
+.beheer-knop{font:inherit;font-size:.8rem;font-weight:700;color:var(--tekst-2);background:transparent;border:1px solid var(--lijn-donker,#2F2F2F);border-radius:999px;padding:6px 14px;cursor:pointer;}
+.beheer-knop:hover{color:#fff;border-color:#fff;}
+.beheer{position:fixed;inset:0;background:rgba(0,0,0,.65);display:grid;place-items:center;z-index:60;padding:16px;}
+.beheer-doos{box-sizing:border-box;width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--vlak);border:1px solid var(--lijn);border-radius:var(--prospex-radius);padding:22px;display:flex;flex-direction:column;gap:14px;}
+.beheer-kop{display:flex;justify-content:space-between;align-items:center;}
+.beheer-kop h2{margin:0;font-size:1.2rem;}
+.beheer .sluit{font:inherit;font-size:1.6rem;line-height:1;background:none;border:0;color:var(--tekst-2);cursor:pointer;}
+.beheer-login,.beheer-nieuw{display:flex;flex-direction:column;gap:8px;}
+.beheer label{font-size:.82rem;color:var(--tekst-2);}
+.beheer input{font:inherit;color:var(--tekst);background:#141414;border:1px solid var(--lijn);border-radius:8px;padding:10px 12px;min-width:0;}
+.beheer input:focus{outline:none;border-color:var(--accent);}
+.beheer .rij{display:flex;gap:8px;}
+.beheer .rij input{flex:1;}
+.beheer-fout{margin:0;color:#FF5CC0;font-size:.85rem;}
+.beheer-uitleg{margin:0;color:var(--tekst-3);font-size:.82rem;}
+.beheer h3{margin:8px 0 6px;font-size:.9rem;color:var(--tekst-2);}
+.beheer-lijst{display:flex;flex-direction:column;gap:6px;}
+.beheer-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;background:#1b1b1b;border-radius:8px;}
+.beheer-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.beheer-item small{color:var(--tekst-3);}
+.beheer-item button{font:inherit;font-size:.8rem;font-weight:700;border-radius:999px;padding:5px 12px;cursor:pointer;background:transparent;color:var(--tekst-2);border:1px solid var(--lijn);}
+.beheer-item button.weg:hover{color:#FF5CC0;border-color:#FF5CC0;}
+.beheer-item button.terug:hover{color:#3FD6D6;border-color:#3FD6D6;}
 .meer{align-self:flex-start;font:inherit;font-size:.82rem;font-weight:700;color:var(--tekst);background:transparent;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;cursor:pointer;}
 .meer:hover{background:#fff;color:#000;}
 body{margin:0;}
@@ -182,6 +205,7 @@ body{margin:0;}
     <span class="prospex-logo"></span>
     <p class="prospex-title">Afsprakenbord</p>
     <div class="prospex-meta" id="meta">&nbsp;</div>
+    <button type="button" class="beheer-knop" id="beheer-knop">Beheer</button>
   </header>
 
   <div class="tabs" role="tablist" aria-label="Weergave">
@@ -311,6 +335,23 @@ body{margin:0;}
     <span>Bron: afspraakbevestigingen van Agendabeheer. Telt op de dag dat de afspraak gemaakt is. Herplanningen (zelfde Ctpid) tellen niet opnieuw. Wordt elke 6 minuten gecontroleerd.</span>
   </footer>
 </div>
+</div>
+<div class="beheer" id="beheer" hidden>
+  <div class="beheer-doos" role="dialog" aria-modal="true" aria-labelledby="beheer-titel">
+    <div class="beheer-kop"><h2 id="beheer-titel">Klanten <em>beheren</em></h2><button type="button" class="sluit" id="beheer-sluit" aria-label="Sluiten">&times;</button></div>
+    <form id="beheer-login" class="beheer-login" autocomplete="off">
+      <label for="beheer-gebruiker">Gebruikersnaam</label><input id="beheer-gebruiker" type="text" autocomplete="off">
+      <label for="beheer-ww">Wachtwoord</label><input id="beheer-ww" type="password" autocomplete="off">
+      <button type="submit" class="prospex-btn prospex-btn--primary">Inloggen</button>
+      <p class="beheer-fout" id="beheer-fout" hidden>Gebruikersnaam of wachtwoord klopt niet.</p>
+    </form>
+    <div id="beheer-inhoud" hidden>
+      <form id="beheer-nieuw" class="beheer-nieuw"><label for="beheer-naam">Klant toevoegen</label><div class="rij"><input id="beheer-naam" type="text" placeholder="Bedrijfsnaam" autocomplete="off"><button type="submit" class="prospex-btn prospex-btn--primary">Toevoegen</button></div></form>
+      <p class="beheer-uitleg">Verwijderen geldt vanaf deze week. In eerdere weken blijft de klant gewoon staan.</p>
+      <div class="beheer-lijst" id="beheer-lijst"></div>
+      <div id="beheer-weg-wrap"><h3>Verwijderde klanten</h3><div class="beheer-lijst" id="beheer-weg"></div></div>
+    </div>
+  </div>
 </div>
 <div class="tip" id="tip" hidden></div>
 <canvas id="confetti"></canvas>
@@ -448,7 +489,7 @@ gekozen=startWeek();
 renderWeken();renderWeek();renderMeta();
 
 const DATA=/*DATA*/;
-dagDocs=DATA.dagen||{};meta={laatsteRun:DATA.laatsteRun};
+const RUW_DAGEN=DATA.dagen||{};dagDocs=RUW_DAGEN;meta={laatsteRun:DATA.laatsteRun};
 renderWeken();renderWeek();renderMeta();
 
 
@@ -534,10 +575,12 @@ function leeg(){return {week:liveWeek(),tel:{},dag:{},eids:[],sinds:0};}
 function liveLaad(){try{const v=JSON.parse(localStorage.getItem(LIVE_KEY)||"{}");if(v.week===liveWeek()&&v.tel&&v.dag&&v.eids)return v;}catch(e){}return leeg();}
 function liveBewaar(v){v.eids=v.eids.slice(-500);try{localStorage.setItem(LIVE_KEY,JSON.stringify(v));}catch(e){}}
 function liveKlanten(){
-  // lopende klanten: bevestigde afspraak in de laatste 8 weken (uit de maildata), plus klanten die deze week al een plusje kregen
+  // lopende klanten: bevestigde afspraak in de laatste 8 weken (maildata), plus handmatig toegevoegde klanten,
+  // plus klanten die deze week al een plusje kregen; min klanten die een admin heeft verwijderd
   const grens=iso(plus(new Date(),-56));const set=new Set(Object.keys(liveLaad().tel));
   Object.entries(dagDocs).forEach(([d,v])=>{if(d>=grens)v.forEach(a=>{if(telt(a))set.add(a.klant);});});
-  return [...set].sort((a,b)=>a.localeCompare(b));
+  const kv=klantLaad();Object.keys(kv.toegevoegd).forEach(k=>set.add(k));
+  return [...set].filter(k=>!klantWeg(k,liveWeek())).sort((a,b)=>a.localeCompare(b));
 }
 function liveZichtbaar(){return !document.getElementById("view-live").hidden;}
 // Past één plusje/minnetje toe. Geeft true terug als het nieuw was.
@@ -635,6 +678,7 @@ try{
   const es=new EventSource(RELAY+"/sse");
   es.onmessage=ev=>{
     let m,b;try{m=JSON.parse(ev.data);b=JSON.parse(m.message);}catch(e){return;}
+    if(b&&b.type==="klant"){const kv=klantLaad();if(klantPasToe(kv,b)){klantBewaar(kv);hertekenAlles();}return;}
     const v=liveLaad();if(!pasToe(v,b,m.time))return;liveBewaar(v);
     if(liveZichtbaar())renderLive(b.d>0?b.k:null);
     if(b.d>0)feest(b.k);
@@ -642,13 +686,98 @@ try{
   es.onopen=()=>liveSync();
 }catch(e){}
 liveSync();
+setTimeout(()=>{if(typeof klantSync==="function")klantSync();},0);
 // Ander tabblad op hetzelfde apparaat: alleen opnieuw tekenen (geluid komt al via het live meeluisteren).
-window.addEventListener("storage",e=>{if(e.key===LIVE_KEY&&liveZichtbaar())renderLive();});
+window.addEventListener("storage",e=>{if(e.key===LIVE_KEY&&liveZichtbaar())renderLive();if(e.key===KLANT_KEY)hertekenAlles();});
 document.getElementById("geluid-aan").addEventListener("click",e=>{
   try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();}catch(x){}
   e.currentTarget.classList.add("aan");e.currentTarget.textContent="Geluid staat aan";
 });
 
+
+// ---------- Klantenbeheer (admin) ----------
+// Toevoegen/verwijderen gaat via hetzelfde kanaal als de plusjes en wordt door GitHub vastgelegd in klanten.json.
+// Let op: dit is een slot tegen per ongeluk klikken, geen echte beveiliging (de site is openbaar).
+const ADMIN_HASH="39792cdc4ce27a531269336a78202594bae1183ff9dcf1e3e4376b0074713d76";
+const KLANT_KEY="afsprakenbord-klanten";
+function klantLaad(){try{const v=JSON.parse(localStorage.getItem(KLANT_KEY)||"{}");return {toegevoegd:v.toegevoegd||{},verwijderd:v.verwijderd||{},eids:v.eids||[]};}catch(e){return {toegevoegd:{},verwijderd:{},eids:[]};}}
+function klantBewaar(v){v.eids=v.eids.slice(-300);try{localStorage.setItem(KLANT_KEY,JSON.stringify(v));}catch(e){}}
+function klantWeg(k,ma){const w=klantLaad().verwijderd[k];return !!w&&ma>=w;}
+function klantPasToe(v,b){
+  if(!b||b.type!=="klant"||!b.k||!b.eid||v.eids.includes(b.eid))return false;
+  const k=String(b.k).trim().slice(0,60);if(!k)return false;
+  if(b.actie==="toevoegen"){v.toegevoegd[k]=b.week||liveWeek();delete v.verwijderd[k];}
+  else if(b.actie==="verwijderen"){v.verwijderd[k]=b.week||liveWeek();delete v.toegevoegd[k];}
+  else if(b.actie==="terugzetten"){delete v.verwijderd[k];}
+  else return false;
+  v.eids.push(b.eid);return true;
+}
+function filterDagen(){
+  const v=klantLaad();const weg=v.verwijderd;
+  if(!Object.keys(weg).length){dagDocs=RUW_DAGEN;return;}
+  const uit={};Object.entries(RUW_DAGEN).forEach(([d,lst])=>{const ma=iso(maandag(parse(d)));const f=lst.filter(a=>!(weg[a.klant]&&ma>=weg[a.klant]));if(f.length)uit[d]=f;});
+  dagDocs=uit;
+}
+function hertekenAlles(){
+  filterDagen();renderWeken();renderWeek();
+  if(!document.getElementById("view-maand").hidden)renderMaand();
+  if(!document.getElementById("view-totaal").hidden)renderTotaal();
+  if(!document.getElementById("view-live").hidden)renderLive();
+  if(!document.getElementById("beheer").hidden&&isAdmin())renderBeheer();
+}
+async function sha256(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
+const isAdmin=()=>{try{return sessionStorage.getItem("afsprakenbord-admin")==="1";}catch(e){return false;}};
+function stuurKlant(actie,k){
+  const b={type:"klant",actie:actie,k:k,week:liveWeek(),eid:MIJN_ID+"-k-"+Date.now()+"-"+Math.random().toString(36).slice(2,6),from:MIJN_ID};
+  const v=klantLaad();klantPasToe(v,b);klantBewaar(v);hertekenAlles();
+  try{fetch(RELAY,{method:"POST",body:JSON.stringify(b)}).catch(()=>{});}catch(e){}
+}
+function renderBeheer(){
+  const v=klantLaad();
+  const actief=liveKlanten();
+  const l=document.getElementById("beheer-lijst");l.innerHTML="";
+  actief.forEach(k=>{const r=document.createElement("div");r.className="beheer-item";
+    r.innerHTML=`<span>${esc(k)}${v.toegevoegd[k]?" <small>(handmatig toegevoegd)</small>":""}</span><button type="button" class="weg">Verwijderen</button>`;
+    r.querySelector("button").addEventListener("click",()=>stuurKlant("verwijderen",k));l.appendChild(r);});
+  const w=document.getElementById("beheer-weg");w.innerHTML="";
+  const weg=Object.entries(v.verwijderd).sort((a,b)=>a[0].localeCompare(b[0]));
+  document.getElementById("beheer-weg-wrap").hidden=!weg.length;
+  weg.forEach(([k,wk])=>{const r=document.createElement("div");r.className="beheer-item";
+    r.innerHTML=`<span>${esc(k)} <small>(weg vanaf week ${weeknr(parse(wk))})</small></span><button type="button" class="terug">Terugzetten</button>`;
+    r.querySelector("button").addEventListener("click",()=>stuurKlant("terugzetten",k));w.appendChild(r);});
+}
+function openBeheer(){
+  document.getElementById("beheer").hidden=false;
+  const ok=isAdmin();document.getElementById("beheer-login").hidden=ok;document.getElementById("beheer-inhoud").hidden=!ok;
+  if(ok){renderBeheer();document.getElementById("beheer-naam").focus();}else document.getElementById("beheer-gebruiker").focus();
+}
+document.getElementById("beheer-knop").addEventListener("click",openBeheer);
+document.getElementById("beheer-sluit").addEventListener("click",()=>{document.getElementById("beheer").hidden=true;});
+document.getElementById("beheer").addEventListener("click",e=>{if(e.target.id==="beheer")e.currentTarget.hidden=true;});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.getElementById("beheer").hidden=true;});
+document.getElementById("beheer-login").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const h=await sha256(document.getElementById("beheer-gebruiker").value.trim()+":"+document.getElementById("beheer-ww").value);
+  document.getElementById("beheer-ww").value="";
+  if(h===ADMIN_HASH){try{sessionStorage.setItem("afsprakenbord-admin","1");}catch(x){}document.getElementById("beheer-fout").hidden=true;openBeheer();}
+  else document.getElementById("beheer-fout").hidden=false;
+});
+document.getElementById("beheer-nieuw").addEventListener("submit",e=>{
+  e.preventDefault();const i=document.getElementById("beheer-naam");const k=i.value.trim();if(!k)return;
+  stuurKlant("toevoegen",k);i.value="";renderBeheer();
+});
+// Vastgelegde klantenlijst ophalen bij openen
+async function klantSync(){
+  try{const r=await fetch("klanten.json?t="+Date.now(),{cache:"no-store"});
+    if(r.ok){const s=await r.json();const v=klantLaad();
+      const eids=new Set([...(s.eids||[]),...v.eids]);
+      const nieuw={toegevoegd:{...(s.toegevoegd||{})},verwijderd:{...(s.verwijderd||{})},eids:[...(s.eids||[])]};
+      // recente lokale/relay-wijzigingen die nog niet vastgelegd zijn, komen via de poll hieronder alsnog binnen
+      klantBewaar(nieuw);}}catch(e){}
+  try{const sinds=Math.floor(Date.now()/1000)-12*3600;const r=await fetch(RELAY+"/json?poll=1&since="+sinds,{cache:"no-store"});
+    if(r.ok){const v=klantLaad();(await r.text()).split("\n").forEach(l=>{if(!l)return;try{const m=JSON.parse(l);if(m.event==="message")klantPasToe(v,JSON.parse(m.message));}catch(e){}});klantBewaar(v);}}catch(e){}
+  hertekenAlles();
+}
 // ---------- Totaal ----------
 let toonAlleK=false,toonAlleP=false;
 function balken(el,rij,max,suffix){

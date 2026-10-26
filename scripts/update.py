@@ -247,6 +247,7 @@ def update_live():
         print("Live: ntfy niet bereikbaar:", e)
         return False
     eids, gewijzigd = set(live["eids"]), False
+    klant_events = []
     for regel in regels:
         try:
             m = json.loads(regel)
@@ -255,6 +256,9 @@ def update_live():
                 continue
             b = json.loads(m.get("message", ""))
         except Exception:
+            continue
+        if b.get("type") == "klant":
+            klant_events.append(b)
             continue
         if b.get("type") != "delta" or b.get("w") != week or not b.get("eid") or b["eid"] in eids:
             continue
@@ -267,11 +271,39 @@ def update_live():
         eids.add(b["eid"])
         live["eids"].append(b["eid"])
         gewijzigd = True
+    update_klanten(klant_events)
     live["eids"] = live["eids"][-500:]
     if gewijzigd or not os.path.exists(path):
         json.dump(live, open(path, "w"), ensure_ascii=False)
         print("Live: stand bijgewerkt", live["tel"])
     return gewijzigd
+
+
+def update_klanten(events):
+    """Klant toevoegen/verwijderen door een admin vastleggen in klanten.json (blijft staan, geen weekreset)."""
+    path = os.path.join(ROOT, "klanten.json")
+    kl = json.load(open(path)) if os.path.exists(path) else {"toegevoegd": {}, "verwijderd": {}, "eids": []}
+    seen, gewijzigd = set(kl["eids"]), False
+    for b in events:
+        k = str(b.get("k", "")).strip()[:60]
+        eid, actie, week = b.get("eid"), b.get("actie"), b.get("week")
+        if not k or not eid or eid in seen or actie not in ("toevoegen", "verwijderen", "terugzetten"):
+            continue
+        if actie == "toevoegen":
+            kl["toegevoegd"][k] = week
+            kl["verwijderd"].pop(k, None)
+        elif actie == "verwijderen":
+            kl["verwijderd"][k] = week
+            kl["toegevoegd"].pop(k, None)
+        else:
+            kl["verwijderd"].pop(k, None)
+        kl["eids"].append(eid)
+        seen.add(eid)
+        gewijzigd = True
+    kl["eids"] = kl["eids"][-300:]
+    if gewijzigd or not os.path.exists(path):
+        json.dump(kl, open(path, "w"), ensure_ascii=False)
+        print("Klanten bijgewerkt:", {"toegevoegd": kl["toegevoegd"], "verwijderd": kl["verwijderd"]})
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
