@@ -524,22 +524,35 @@ function renderMaand(){
 }
 document.getElementById("meer-vergelijk").addEventListener("click",()=>{toonAlleV=!toonAlleV;renderMaand();});
 
-// ---------- Live bord (alleen dit scherm, elke maandag leeg) ----------
+// ---------- Live bord: +/- per klant, live op elk apparaat, elke maandag leeg ----------
+// Stand = live.json (door GitHub vastgelegd) + recente plusjes van ntfy.sh. Geen persoonsgegevens: alleen klantnaam en +1/-1.
 const LIVE_KEY="afsprakenbord-live";
+const RELAY="https://ntfy.sh/prospex-afsprakenbord-ffb9535c0211e74c8e65acc0";
+const MIJN_ID=Math.random().toString(36).slice(2,10);
 function liveWeek(){return huidigeMa();}
-function liveLaad(){try{const v=JSON.parse(localStorage.getItem(LIVE_KEY)||"{}");if(v.week===liveWeek())return v;}catch(e){}return {week:liveWeek(),tel:{},vandaag:{}};}
-function liveBewaar(v){try{localStorage.setItem(LIVE_KEY,JSON.stringify(v));}catch(e){}}
+function leeg(){return {week:liveWeek(),tel:{},dag:{},eids:[],sinds:0};}
+function liveLaad(){try{const v=JSON.parse(localStorage.getItem(LIVE_KEY)||"{}");if(v.week===liveWeek()&&v.tel&&v.dag&&v.eids)return v;}catch(e){}return leeg();}
+function liveBewaar(v){v.eids=v.eids.slice(-500);try{localStorage.setItem(LIVE_KEY,JSON.stringify(v));}catch(e){}}
 function liveKlanten(){
-  // lopende klanten: bevestigde afspraak in de laatste 8 weken (uit de maildata)
-  const grens=iso(plus(new Date(),-56));const set=new Set();
+  // lopende klanten: bevestigde afspraak in de laatste 8 weken (uit de maildata), plus klanten die deze week al een plusje kregen
+  const grens=iso(plus(new Date(),-56));const set=new Set(Object.keys(liveLaad().tel));
   Object.entries(dagDocs).forEach(([d,v])=>{if(d>=grens)v.forEach(a=>{if(telt(a))set.add(a.klant);});});
   return [...set].sort((a,b)=>a.localeCompare(b));
+}
+function liveZichtbaar(){return !document.getElementById("view-live").hidden;}
+// Past één plusje/minnetje toe. Geeft true terug als het nieuw was.
+function pasToe(v,b,tijd){
+  if(!b||b.type!=="delta"||b.w!==liveWeek()||!b.eid||v.eids.includes(b.eid))return false;
+  const d=Number(b.d);if(d!==1&&d!==-1)return false;
+  const nu=(v.tel[b.k]||0)+d;if(nu<0)return false;
+  v.tel[b.k]=nu;const dag=iso(tijd?new Date(tijd*1000):new Date());v.dag[dag]=Math.max(0,(v.dag[dag]||0)+d);
+  v.eids.push(b.eid);if(tijd)v.sinds=Math.max(v.sinds||0,tijd);return true;
 }
 function renderLive(flitsKlant){
   const v=liveLaad();const vd=vandaag();
   const tot=Object.values(v.tel).reduce((a,b)=>a+b,0);
   document.getElementById("live-totaal").textContent=tot;
-  document.getElementById("live-vandaag").textContent=v.vandaag[vd]||0;
+  document.getElementById("live-vandaag").textContent=(v.dag||{})[vd]||0;
   const m=parse(liveWeek());document.getElementById("live-eyebrow").textContent=`Live bord, week ${weeknr(m)}`;
   const g=document.getElementById("live-grid");
   // FLIP: oude posities onthouden zodat klanten zichtbaar verschuiven in de ranking
@@ -564,13 +577,10 @@ function renderLive(flitsKlant){
   if(flitsKlant)setTimeout(()=>{const f=g.querySelector(".flits");if(f)f.classList.remove("flits");},1600);
 }
 function livePlus(k,d){
-  const v=liveLaad();const vd=vandaag();
-  const nu=(v.tel[k]||0)+d;if(nu<0)return;
-  v.tel[k]=nu;v.vandaag[vd]=Math.max(0,(v.vandaag[vd]||0)+d);
-  Object.keys(v.vandaag).forEach(x=>{if(x!==vd)delete v.vandaag[x];});
-  liveBewaar(v);renderLive(d>0?k:null);
-  if(d>0)feest(k);
-  if(typeof relaySend==="function"){const eid=MIJN_ID+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,6);eidGezien(eid,true);relaySend({type:"delta",k:k,d:d,eid:eid});if(isBord())stuurStand();}
+  const v=liveLaad();if((v.tel[k]||0)+d<0)return;
+  const b={type:"delta",k:k,d:d,w:liveWeek(),eid:MIJN_ID+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,6),from:MIJN_ID};
+  pasToe(v,b,0);liveBewaar(v);renderLive(d>0?k:null);if(d>0)feest(k);
+  try{fetch(RELAY,{method:"POST",body:JSON.stringify(b)}).catch(()=>{});}catch(e){}
 }
 let audioCtx=null;
 function juichGeluid(){
@@ -595,7 +605,7 @@ function juichGeluid(){
 function feest(k){
   juichGeluid();
   const j=document.getElementById("juich");document.getElementById("juich-klant").textContent=k;
-  j.classList.add("aan");clearTimeout(j._t);j._t=setTimeout(()=>j.classList.remove("aan"),1900);
+  j.classList.remove("aan");void j.offsetWidth;j.classList.add("aan");clearTimeout(j._t);j._t=setTimeout(()=>j.classList.remove("aan"),15000);
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const cv=document.getElementById("confetti"),cx=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;
   const kleuren=["#FF4A18","#FF8A66","#FFFFFF","#FAD8B1","#FFD83D"];
@@ -603,48 +613,42 @@ function feest(k){
   let f=0;(function stap(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.vy+=.45;p.x+=p.vx;p.y+=p.vy;p.a+=.2;cx.save();cx.translate(p.x,p.y);cx.rotate(p.a);cx.fillStyle=p.c;cx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);cx.restore();});f++;if(f<120)requestAnimationFrame(stap);else cx.clearRect(0,0,cv.width,cv.height);})();
 }
 
-// Live tussen tabbladen en vensters op hetzelfde apparaat: reageer op wijzigingen van een ander tabblad.
-window.addEventListener("storage",e=>{
-  if(e.key!==LIVE_KEY)return;
-  let oud={},nieuw={};try{oud=(JSON.parse(e.oldValue||"{}").tel)||{};nieuw=(JSON.parse(e.newValue||"{}").tel)||{};}catch(x){}
-  const erbij=Object.keys(nieuw).find(k=>(nieuw[k]||0)>(oud[k]||0));
-  if(!document.getElementById("view-live").hidden)renderLive(erbij||null);
-  if(erbij)feest(erbij);
-});
-document.getElementById("geluid-aan").addEventListener("click",e=>{
-  try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();}catch(x){}
-  e.currentTarget.classList.add("aan");e.currentTarget.textContent="Dit is het bord, geluid aan";
-  try{localStorage.setItem("afsprakenbord-isbord","1");}catch(x){}
-  if(typeof stuurStand==="function")stuurStand();
-});
-
-// ---------- Live tussen apparaten via ntfy.sh (alleen klantnaam en +1/-1, geen persoonsgegevens) ----------
-const RELAY="https://ntfy.sh/prospex-afsprakenbord-ffb9535c0211e74c8e65acc0";
-const MIJN_ID=Math.random().toString(36).slice(2,10);
-const isBord=()=>{try{return localStorage.getItem("afsprakenbord-isbord")==="1";}catch(e){return false;}};
-function relaySend(obj){try{fetch(RELAY,{method:"POST",body:JSON.stringify({...obj,from:MIJN_ID,w:liveWeek()})}).catch(()=>{});}catch(e){}}
-function stuurStand(){const v=liveLaad();relaySend({type:"stand",tel:v.tel,vandaag:v.vandaag});}
-function pasToe(k,d){const v=liveLaad();const vd=vandaag();const nu=(v.tel[k]||0)+d;if(nu<0)return false;
-  v.tel[k]=nu;v.vandaag[vd]=Math.max(0,(v.vandaag[vd]||0)+d);Object.keys(v.vandaag).forEach(x=>{if(x!==vd)delete v.vandaag[x];});liveBewaar(v);return true;}
-function eidGezien(eid,markeer){try{const l=JSON.parse(localStorage.getItem("afsprakenbord-eids")||"[]");if(l.includes(eid))return true;if(markeer){l.push(eid);localStorage.setItem("afsprakenbord-eids",JSON.stringify(l.slice(-80)));}}catch(e){}return false;}
-function liveZichtbaar(){return !document.getElementById("view-live").hidden;}
+// Bij openen: vastgelegde stand van GitHub ophalen en aanvullen met de plusjes van de laatste 12 uur.
+async function liveSync(){
+  let v=liveLaad();
+  try{
+    const r=await fetch("live.json?t="+Date.now(),{cache:"no-store"});
+    if(r.ok){const s=await r.json();
+      if(s.week===liveWeek()){const eids=new Set([...(s.eids||[]),...v.eids]);
+        // eigen recente plusjes die nog niet in de vastgelegde stand zitten, blijven via ntfy hieronder binnenkomen
+        v={week:s.week,tel:{...s.tel},dag:{...(s.dag||{})},eids:[...(s.eids||[])],sinds:s.sinds||0};}}
+  }catch(e){}
+  try{
+    const sinds=Math.max(v.sinds||0,Math.floor(Date.now()/1000)-12*3600);
+    const r=await fetch(RELAY+"/json?poll=1&since="+sinds,{cache:"no-store"});
+    if(r.ok){(await r.text()).split("\n").forEach(l=>{if(!l)return;try{const m=JSON.parse(l);if(m.event!=="message")return;pasToe(v,JSON.parse(m.message),m.time);}catch(e){}});}
+  }catch(e){}
+  liveBewaar(v);if(liveZichtbaar())renderLive();
+}
+// Live meeluisteren: elk plusje van elk apparaat komt direct binnen.
 try{
   const es=new EventSource(RELAY+"/sse");
-  es.onopen=()=>{if(!isBord())relaySend({type:"vraag"});};
   es.onmessage=ev=>{
-    let m;try{m=JSON.parse(JSON.parse(ev.data).message);}catch(e){return;}
-    if(!m||m.from===MIJN_ID||m.w!==liveWeek())return;
-    if(m.type==="delta"){
-      if(eidGezien(m.eid,true))return;  // al verwerkt (bijv. door een ander tabblad op dit apparaat)
-      if(!pasToe(m.k,m.d))return;
-      if(liveZichtbaar())renderLive(m.d>0?m.k:null);
-      if(m.d>0)feest(m.k);
-      if(isBord())stuurStand();
-    }else if(m.type==="stand"&&!isBord()){
-      const v=liveLaad();v.tel=m.tel||{};v.vandaag=m.vandaag||{};liveBewaar(v);if(liveZichtbaar())renderLive();
-    }else if(m.type==="vraag"&&isBord()){stuurStand();}
+    let m,b;try{m=JSON.parse(ev.data);b=JSON.parse(m.message);}catch(e){return;}
+    const v=liveLaad();if(!pasToe(v,b,m.time))return;liveBewaar(v);
+    if(liveZichtbaar())renderLive(b.d>0?b.k:null);
+    if(b.d>0)feest(b.k);
   };
+  es.onopen=()=>liveSync();
 }catch(e){}
+liveSync();
+// Ander tabblad op hetzelfde apparaat: alleen opnieuw tekenen (geluid komt al via het live meeluisteren).
+window.addEventListener("storage",e=>{if(e.key===LIVE_KEY&&liveZichtbaar())renderLive();});
+document.getElementById("geluid-aan").addEventListener("click",e=>{
+  try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();}catch(x){}
+  e.currentTarget.classList.add("aan");e.currentTarget.textContent="Geluid staat aan";
+});
+
 // ---------- Totaal ----------
 let toonAlleK=false,toonAlleP=false;
 function balken(el,rij,max,suffix){

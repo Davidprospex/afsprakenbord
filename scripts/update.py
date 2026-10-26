@@ -223,10 +223,61 @@ def build(data):
     open(os.path.join(ROOT, "index.html"), "w").write(page)
 
 
+
+# ---------- Live bord: plusjes van ntfy.sh vastleggen in live.json ----------
+LIVE_TOPIC = "prospex-afsprakenbord-ffb9535c0211e74c8e65acc0"
+
+
+def update_live():
+    """Leest de +/- van het Live-tabblad (ntfy.sh bewaart ze 12 uur) en legt de stand vast in live.json.
+    Zo ziet elk apparaat bij openen de juiste stand, ook als er geen bord openstaat."""
+    from zoneinfo import ZoneInfo
+    nu = dt.datetime.now(ZoneInfo("Europe/Amsterdam"))
+    week = (nu.date() - dt.timedelta(days=nu.weekday())).isoformat()
+    path = os.path.join(ROOT, "live.json")
+    live = json.load(open(path)) if os.path.exists(path) else {}
+    if live.get("week") != week:
+        live = {"week": week, "tel": {}, "dag": {}, "eids": [], "sinds": 0}
+    sinds = max(int(live.get("sinds", 0)), int(nu.timestamp()) - 12 * 3600)
+    url = f"https://ntfy.sh/{LIVE_TOPIC}/json?poll=1&since={sinds}"
+    try:
+        with urllib.request.urlopen(url, timeout=20) as r:
+            regels = r.read().decode().splitlines()
+    except Exception as e:
+        print("Live: ntfy niet bereikbaar:", e)
+        return False
+    eids, gewijzigd = set(live["eids"]), False
+    for regel in regels:
+        try:
+            m = json.loads(regel)
+            live["sinds"] = max(live["sinds"], int(m.get("time", 0)))
+            if m.get("event") != "message":
+                continue
+            b = json.loads(m.get("message", ""))
+        except Exception:
+            continue
+        if b.get("type") != "delta" or b.get("w") != week or not b.get("eid") or b["eid"] in eids:
+            continue
+        k, d = str(b.get("k", ""))[:60], int(b.get("d", 0))
+        if d not in (1, -1) or not k or live["tel"].get(k, 0) + d < 0:
+            continue
+        dag = dt.datetime.fromtimestamp(int(m["time"]), ZoneInfo("Europe/Amsterdam")).date().isoformat()
+        live["tel"][k] = live["tel"].get(k, 0) + d
+        live["dag"][dag] = max(0, live["dag"].get(dag, 0) + d)
+        eids.add(b["eid"])
+        live["eids"].append(b["eid"])
+        gewijzigd = True
+    live["eids"] = live["eids"][-500:]
+    if gewijzigd or not os.path.exists(path):
+        json.dump(live, open(path, "w"), ensure_ascii=False)
+        print("Live: stand bijgewerkt", live["tel"])
+    return gewijzigd
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         # Lokale test: python3 update.py --test bericht.json [...]
         for f in sys.argv[2:]:
             print(json.dumps(parse(json.load(open(f))), ensure_ascii=False))
     else:
+        update_live()
         main()
