@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-27T09:38",
+ "laatsteRun": "2026-10-27T10:19",
  "dagen": {
   "2026-01-06": [
    {
@@ -8585,6 +8585,15 @@
     "nummer": "1073",
     "status": "telt",
     "onderwerp": "30fbe96852aa"
+   },
+   {
+    "id": "<ac6dc058-c49e-4ffb-af42-5fb0a8860606@prospex.nl>",
+    "tijd": "11:12",
+    "klant": "Lyreco",
+    "profiel": "Hamza Bouharrou",
+    "nummer": "331",
+    "status": "telt",
+    "onderwerp": "ecf64a5d6d42"
    },
    {
     "id": "<c468b879-863d-488b-9142-1c4f0d90cda6@prospex.nl>",
