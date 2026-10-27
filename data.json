@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-23T15:33",
+ "laatsteRun": "2026-10-27T09:38",
  "dagen": {
   "2026-01-06": [
    {
@@ -8556,6 +8556,89 @@
     "nummer": "2796",
     "status": "telt",
     "onderwerp": "91adab7b48ba"
+   }
+  ],
+  "2026-10-26": [
+   {
+    "id": "<1f3fbe28-cda5-47a6-897f-4202f4f956ae@prospex.nl>",
+    "tijd": "09:41",
+    "klant": "Nowy Styl",
+    "profiel": "Nowy Styl",
+    "nummer": "2805",
+    "status": "telt",
+    "onderwerp": "2954747b34f0"
+   },
+   {
+    "id": "<ab2bd04c-0850-40fc-9002-14edd1979494@prospex.nl>",
+    "tijd": "10:24",
+    "klant": "Riff",
+    "profiel": "Tobias Walraven",
+    "nummer": "1488",
+    "status": "telt",
+    "onderwerp": "12e30bf1f442"
+   },
+   {
+    "id": "<329d54ce-c18d-40e9-96ed-389349da9cb0@prospex.nl>",
+    "tijd": "10:56",
+    "klant": "Prostrive",
+    "profiel": "Sven Hurks",
+    "nummer": "1073",
+    "status": "telt",
+    "onderwerp": "30fbe96852aa"
+   },
+   {
+    "id": "<c468b879-863d-488b-9142-1c4f0d90cda6@prospex.nl>",
+    "tijd": "11:52",
+    "klant": "Prostrive",
+    "profiel": "Boris Winter",
+    "nummer": "815",
+    "status": "telt",
+    "onderwerp": "4aa7542530f5"
+   },
+   {
+    "id": "<9c63e590-7daf-454e-9869-8464aca8b882@prospex.nl>",
+    "tijd": "14:01",
+    "klant": "Mfactor",
+    "profiel": "Jeff Kooijman",
+    "nummer": "1162",
+    "status": "telt",
+    "onderwerp": "6413a876495f"
+   },
+   {
+    "id": "<ab536f62-4b89-46d9-8836-7aee86469988@prospex.nl>",
+    "tijd": "14:16",
+    "klant": "Prostrive",
+    "profiel": "Sven Hurks",
+    "nummer": "1072",
+    "status": "telt",
+    "onderwerp": "f0f437ea5ca5"
+   },
+   {
+    "id": "<323f09d6-4112-40bb-a453-513fb5846871@prospex.nl>",
+    "tijd": "14:23",
+    "klant": "QRC",
+    "profiel": "Sabine van Amstel",
+    "nummer": "675",
+    "status": "telt",
+    "onderwerp": "1d25b86c175c"
+   },
+   {
+    "id": "<88470780-fd44-48ad-9826-131319250ffd@prospex.nl>",
+    "tijd": "14:38",
+    "klant": "Mfactor",
+    "profiel": "Jeff Kooijman",
+    "nummer": "1149",
+    "status": "telt",
+    "onderwerp": "a354ab32be44"
+   },
+   {
+    "id": "<f025d9dd-ac0c-4f2e-b014-5f6333a9639f@prospex.nl>",
+    "tijd": "16:37",
+    "klant": "Prospex",
+    "profiel": "Roy",
+    "nummer": "2797",
+    "status": "telt",
+    "onderwerp": "2f6bd243e64a"
    }
   ]
  }
