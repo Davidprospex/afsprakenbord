@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-28T11:59",
+ "laatsteRun": "2026-10-28T12:40",
  "dagen": {
   "2026-01-06": [
    {
@@ -8716,6 +8716,15 @@
    }
   ],
   "2026-10-28": [
+   {
+    "id": "<009f9f0a-01c0-474a-88d9-1b83e3c2f3a4@prospex.nl>",
+    "tijd": "09:51",
+    "klant": "Hovingh",
+    "profiel": "Wilfred",
+    "nummer": "519",
+    "status": "telt",
+    "onderwerp": "b07c29ebc96e"
+   },
    {
     "id": "<d5abd137-adcb-458d-b886-2dea1509cd51@prospex.nl>",
     "tijd": "10:19",
