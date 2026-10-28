@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-27T12:17",
+ "laatsteRun": "2026-10-28T09:33",
  "dagen": {
   "2026-01-06": [
    {
@@ -8677,6 +8677,24 @@
     "nummer": "2798",
     "status": "telt",
     "onderwerp": "cc1a06e1a78a"
+   },
+   {
+    "id": "<c84011ec-83ec-4ae0-aad0-a192f99327db@prospex.nl>",
+    "tijd": "15:23",
+    "klant": "Marcus",
+    "profiel": "Bob van der Lee",
+    "nummer": "1468",
+    "status": "telt",
+    "onderwerp": "ae179db0a7e3"
+   },
+   {
+    "id": "<c0c60058-5123-4de3-b675-5f471649e7d7@prospex.nl>",
+    "tijd": "17:12",
+    "klant": "Marcus",
+    "profiel": "Maxim Spek",
+    "nummer": "1469",
+    "status": "telt",
+    "onderwerp": "42dfee0686bf"
    }
   ]
  }
