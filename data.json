@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-28T12:40",
+ "laatsteRun": "2026-10-28T14:23",
  "dagen": {
   "2026-01-06": [
    {
@@ -8742,6 +8742,15 @@
     "nummer": "1161",
     "status": "telt",
     "onderwerp": "eb998c1a5f5c"
+   },
+   {
+    "id": "<928b8e67-a2ec-4edf-b616-e899d0ffddfb@prospex.nl>",
+    "tijd": "13:02",
+    "klant": "Axelio",
+    "profiel": "Eric Vredeveldt",
+    "nummer": "329",
+    "status": "telt",
+    "onderwerp": "9815eb9bcc8e"
    }
   ]
  }
