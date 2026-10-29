@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-28T14:23",
+ "laatsteRun": "2026-10-29T11:18",
  "dagen": {
   "2026-01-06": [
    {
@@ -8751,6 +8751,17 @@
     "nummer": "329",
     "status": "telt",
     "onderwerp": "9815eb9bcc8e"
+   }
+  ],
+  "2026-10-29": [
+   {
+    "id": "<50051a5a-a728-4607-9eff-dcc023ababa3@prospex.nl>",
+    "tijd": "11:05",
+    "klant": "Prospex",
+    "profiel": "Roy",
+    "nummer": "2800",
+    "status": "telt",
+    "onderwerp": "440254ce6008"
    }
   ]
  }
