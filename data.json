@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-29T13:23",
+ "laatsteRun": "2026-10-29T14:31",
  "dagen": {
   "2026-01-06": [
    {
@@ -8780,6 +8780,24 @@
     "nummer": "96",
     "status": "telt",
     "onderwerp": "ccbb5eefc45d"
+   },
+   {
+    "id": "<18c056ea-d7b3-4736-be77-a95f6b998ecc@prospex.nl>",
+    "tijd": "11:58",
+    "klant": "Prostrive",
+    "profiel": "Sven Hurks",
+    "nummer": "1411",
+    "status": "telt",
+    "onderwerp": "b222443eccb1"
+   },
+   {
+    "id": "<93203770-f45d-432d-bdf1-262a15775223@prospex.nl>",
+    "tijd": "12:40",
+    "klant": "Prospex",
+    "profiel": "Herbert",
+    "nummer": "2801",
+    "status": "telt",
+    "onderwerp": "5bd5dca59684"
    }
   ]
  }
