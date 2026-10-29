@@ -11679,8 +11679,28 @@
     "status": "telt",
     "onderwerp": "ae2d25acd389",
     "proj": "6b54c09e"
+   },
+   {
+    "id": "<3c9650b9-c1d3-49b2-9f21-ef0a05a44b34@prospex.nl>",
+    "tijd": "14:06",
+    "klant": "Touch",
+    "profiel": "Ruben Retel",
+    "nummer": "980",
+    "status": "telt",
+    "onderwerp": "3074233be4d1",
+    "proj": "d32d0316"
+   },
+   {
+    "id": "<6eb86c41-3474-4624-b2ac-8fb36aeb8b82@prospex.nl>",
+    "tijd": "14:38",
+    "klant": "Marcus",
+    "profiel": "Bob van der Lee",
+    "nummer": "1470",
+    "status": "telt",
+    "onderwerp": "ca824c97a2c5",
+    "proj": "072a01b4"
    }
   ]
  },
- "laatsteRun": "2026-10-29T15:48"
+ "laatsteRun": "2026-10-29T16:21"
 }
