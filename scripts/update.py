@@ -191,7 +191,7 @@ def main():
             gezien[a["onderwerp"]] = max(gezien.get(a["onderwerp"], a["datum"]), a["datum"])
     nieuw = 0
     telling = {"opgehaald": 0, "geen bevestiging": 0, "al op bord": 0, "zelfde ctpid": 0, "zelfde onderwerp": 0}
-    debug_klant = os.environ.get("DEBUG_KLANT", "lyreco").lower()
+    debug_klant = os.environ.get("DEBUG_KLANT", "").lower()  # bijv. DEBUG_KLANT=lyreco voor diagnose
     def dbg(msg, uitkomst, a=None):
         subj = (msg.get("subject") or "").lower()
         if debug_klant and debug_klant in subj:
