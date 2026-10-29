@@ -16,6 +16,7 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -129,21 +130,43 @@ def token():
         return json.load(r)["access_token"]
 
 
-def fetch(since_iso):
-    mailbox = os.environ.get("MAILBOX", "socialassistant@prospex.nl")
-    q = urllib.parse.urlencode({
-        "$filter": f"receivedDateTime ge {since_iso}",
-        "$select": "id,subject,body,receivedDateTime,internetMessageId",
-        "$orderby": "receivedDateTime asc",
-        "$top": "100",
-    })
-    url = f"https://graph.microsoft.com/v1.0/users/{mailbox}/mailFolders/inbox/messages?{q}"
-    headers = {"Authorization": f"Bearer {token()}", "Prefer": 'outlook.body-content-type="html"'}
+MAPPEN = ["inbox", "deleteditems", "archive"]  # bevestigingen staan niet alleen in de Postvak IN
+
+
+def _pages(url, headers):
     while url:
         with urllib.request.urlopen(urllib.request.Request(url, headers=headers)) as r:
             page = json.load(r)
         yield from page.get("value", [])
         url = page.get("@odata.nextLink")
+
+
+def fetch(since_iso):
+    """Alle bevestigingen sinds since_iso uit alle relevante mappen, van elke afzender, oudste eerst."""
+    mailbox = os.environ.get("MAILBOX", "socialassistant@prospex.nl")
+    headers = {"Authorization": f"Bearer {token()}", "Prefer": 'outlook.body-content-type="html"'}
+    alles = []
+    for map_ in MAPPEN:
+        basis = {"$select": "id,subject,body,receivedDateTime,internetMessageId", "$top": "100"}
+        filters = [
+            f"receivedDateTime ge {since_iso} and (startswith(subject,'Afspraakbevestiging') or startswith(subject,'Appointment confirmation'))",
+            f"receivedDateTime ge {since_iso}",  # terugval als de server de onderwerpfilter niet accepteert
+        ]
+        for f in filters:
+            q = urllib.parse.urlencode({**basis, "$filter": f})
+            url = f"https://graph.microsoft.com/v1.0/users/{mailbox}/mailFolders/{map_}/messages?{q}"
+            try:
+                berichten = list(_pages(url, headers))
+                break
+            except urllib.error.HTTPError as e:
+                if e.code == 404:  # map bestaat niet
+                    berichten = []
+                    break
+                berichten = None
+        print(f"Map {map_}: {len(berichten or [])} berichten")
+        alles += berichten or []
+    alles.sort(key=lambda m: m.get("receivedDateTime", ""))
+    return alles
 
 
 def main():
