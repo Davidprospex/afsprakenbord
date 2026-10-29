@@ -1,6 +1,6 @@
 {
  "bron": "mail",
- "laatsteRun": "2026-10-29T11:18",
+ "laatsteRun": "2026-10-29T13:23",
  "dagen": {
   "2026-01-06": [
    {
@@ -8755,6 +8755,15 @@
   ],
   "2026-10-29": [
    {
+    "id": "<b3f61a04-7a48-4959-b2f4-eac97addb6a1@prospex.nl>",
+    "tijd": "10:23",
+    "klant": "Hovingh",
+    "profiel": "Wilfred de Roos",
+    "nummer": "30478",
+    "status": "telt",
+    "onderwerp": "4dd0e4175342"
+   },
+   {
     "id": "<50051a5a-a728-4607-9eff-dcc023ababa3@prospex.nl>",
     "tijd": "11:05",
     "klant": "Prospex",
@@ -8762,6 +8771,15 @@
     "nummer": "2800",
     "status": "telt",
     "onderwerp": "440254ce6008"
+   },
+   {
+    "id": "<66fda5a5-7057-4eee-b4b1-384e04d69c8e@prospex.nl>",
+    "tijd": "11:50",
+    "klant": "Axelio",
+    "profiel": "Eric Vredeveldt",
+    "nummer": "96",
+    "status": "telt",
+    "onderwerp": "ccbb5eefc45d"
    }
   ]
  }
