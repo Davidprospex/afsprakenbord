@@ -114,7 +114,9 @@ def parse(msg):
         "nummer": field(text, "Ctpid"),
         "status": "telt",
         # vingerafdruk van het onderwerp (bevat de prospectnaam, die slaan we niet leesbaar op)
-        "onderwerp": hashlib.sha1(re.sub(r"\s+", " ", msg.get("subject") or "").strip().lower().encode()).hexdigest()[:12],
+        "onderwerp": hashlib.sha1(re.sub(r"^(?:\s*(?:fw|fwd|doorgestuurd)\s*:\s*)+", "", re.sub(r"\s+", " ", msg.get("subject") or "").strip().lower()).encode()).hexdigest()[:12],
+        # Ctpid is alleen uniek binnen een project: project (als vingerafdruk) hoort bij de sleutel
+        "proj": hashlib.sha1(project.strip().lower().encode()).hexdigest()[:8],
     }
 
 
@@ -183,7 +185,7 @@ def main():
     sleutels = {}
     for a in alle:
         if a["nummer"]:
-            k = (a["klant"], a["nummer"])
+            k = (a["klant"], a.get("proj", ""), a["nummer"])
             sleutels[k] = max(sleutels.get(k, a["datum"]), a["datum"])
     gezien = {}
     for a in alle:
@@ -211,7 +213,7 @@ def main():
             dbg(msg, "AL OP BORD", a)
             telling["al op bord"] += 1
             continue
-        vorig = sleutels.get((a["klant"], a["nummer"])) if a["nummer"] else None
+        vorig = sleutels.get((a["klant"], a.get("proj", ""), a["nummer"])) if a["nummer"] else None
         if vorig and abs((dt.date.fromisoformat(a["datum"]) - dt.date.fromisoformat(vorig)).days) <= 30:
             dbg(msg, "ZELFDE CTPID (binnen 30 dagen)", a)
             telling["zelfde ctpid"] += 1
@@ -227,7 +229,7 @@ def main():
         data["dagen"].setdefault(dag, []).append(a)
         ids.add(a["id"])
         if a["nummer"]:
-            sleutels[(a["klant"], a["nummer"])] = dag
+            sleutels[(a["klant"], a.get("proj", ""), a["nummer"])] = dag
         nieuw += 1
     for dag in data["dagen"].values():
         dag.sort(key=lambda a: a["tijd"])
