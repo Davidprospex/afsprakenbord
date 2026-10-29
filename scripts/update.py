@@ -40,7 +40,7 @@ ALIASES = {
 }
 KANON_L = {k.lower(): k for k in KANON}
 
-SUBJECT_RE = re.compile(r"^\s*(Afspraakbevestiging|Appointment confirmation)\b", re.I)
+SUBJECT_RE = re.compile(r"^[\s\u200b\u200e\u200f\ufeff]*(?:(?:FW|FWD|Fwd|Doorgestuurd)\s*:\s*)*(Afspraakbevestiging|Appointment confirmation)\b", re.I)
 STAMP_RE = re.compile(r"(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})(?::\d{2})?")
 
 
@@ -148,10 +148,8 @@ def fetch(since_iso):
     alles = []
     for map_ in MAPPEN:
         basis = {"$select": "id,subject,body,receivedDateTime,internetMessageId", "$top": "100"}
-        filters = [
-            f"receivedDateTime ge {since_iso} and (startswith(subject,'Afspraakbevestiging') or startswith(subject,'Appointment confirmation'))",
-            f"receivedDateTime ge {since_iso}",  # terugval als de server de onderwerpfilter niet accepteert
-        ]
+        # Geen onderwerpfilter op de server: doorgestuurde bevestigingen beginnen anders. We kiezen zelf (SUBJECT_RE).
+        filters = [f"receivedDateTime ge {since_iso}"]
         for f in filters:
             q = urllib.parse.urlencode({**basis, "$filter": f})
             url = f"https://graph.microsoft.com/v1.0/users/{mailbox}/mailFolders/{map_}/messages?{q}"
