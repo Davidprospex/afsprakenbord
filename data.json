@@ -8625,6 +8625,13 @@
     "proj": "168ee64b"
    },
    {
+    "id": "handmatig-lyreco-1",
+    "tijd": "12:00",
+    "klant": "Lyreco",
+    "nummer": "",
+    "status": "telt"
+   },
+   {
     "id": "<e7d0d752-8bf8-4e15-97fd-02db2e8aade7@prospex.nl>",
     "tijd": "12:37",
     "klant": "Personeelsadviseur",
@@ -8737,6 +8744,13 @@
     "status": "telt",
     "onderwerp": "3f86ddc1cbbb",
     "proj": "168ee64b"
+   },
+   {
+    "id": "handmatig-lyreco-2",
+    "tijd": "12:00",
+    "klant": "Lyreco",
+    "nummer": "",
+    "status": "telt"
    },
    {
     "id": "<8158437f-d781-49f2-be66-eec0c41bd773@prospex.nl>",

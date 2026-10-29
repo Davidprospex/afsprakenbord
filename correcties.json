@@ -1,0 +1,7 @@
+{
+ "uitleg": "Handmatige correcties: afspraken die niet in de mailbox van socialassistant staan. Het script neemt ze altijd mee, ook bij een volledige herbouw.",
+ "afspraken": [
+  {"id": "handmatig-lyreco-1", "datum": "2026-09-08", "tijd": "12:00", "klant": "Lyreco", "nummer": "", "status": "telt", "reden": "Op verzoek David (2026-10-29): bevestiging nooit in socialassistant aangekomen"},
+  {"id": "handmatig-lyreco-2", "datum": "2026-09-10", "tijd": "12:00", "klant": "Lyreco", "nummer": "", "status": "telt", "reden": "Op verzoek David (2026-10-29): bevestiging nooit in socialassistant aangekomen"}
+ ]
+}

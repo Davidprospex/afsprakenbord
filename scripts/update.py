@@ -231,6 +231,16 @@ def main():
         if a["nummer"]:
             sleutels[(a["klant"], a.get("proj", ""), a["nummer"])] = dag
         nieuw += 1
+    # Handmatige correcties (correcties.json) altijd meenemen, ook bij een volledige herbouw
+    cpath = os.path.join(ROOT, "correcties.json")
+    if os.path.exists(cpath):
+        for c in json.load(open(cpath)).get("afspraken", []):
+            if c["id"] in ids:
+                continue
+            item = {k: v for k, v in c.items() if k not in ("datum", "reden")}
+            data["dagen"].setdefault(c["datum"], []).append(item)
+            ids.add(c["id"])
+            nieuw += 1
     for dag in data["dagen"].values():
         dag.sort(key=lambda a: a["tijd"])
     data["dagen"] = dict(sorted(data["dagen"].items()))
