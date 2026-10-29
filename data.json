@@ -7543,6 +7543,15 @@
     "nummer": "499",
     "status": "telt",
     "onderwerp": "96c1b964c59b"
+   },
+   {
+    "id": "<VI1PR06MB4349DA8B95D0E8EB1E0613C6CAB62@VI1PR06MB4349.eurprd06.prod.outlook.com>",
+    "tijd": "15:08",
+    "klant": "Prostrive",
+    "profiel": "Sven Hurks",
+    "nummer": "676767",
+    "status": "telt",
+    "onderwerp": "a074d81b5e1d"
    }
   ],
   "2026-09-03": [
@@ -8972,6 +8981,15 @@
     "onderwerp": "bab5c0cc8380"
    },
    {
+    "id": "<VI1PR06MB43497511422A49E4F5B325F9CA812@VI1PR06MB4349.eurprd06.prod.outlook.com>",
+    "tijd": "13:50",
+    "klant": "Marcus",
+    "profiel": "Maxim Spek",
+    "nummer": "676767",
+    "status": "telt",
+    "onderwerp": "c0e368cea6de"
+   },
+   {
     "id": "<5695e257-f799-4571-9b76-b41ddea4ae0f@prospex.nl>",
     "tijd": "14:49",
     "klant": "Mfactor",
@@ -9255,6 +9273,51 @@
     "nummer": "2782",
     "status": "telt",
     "onderwerp": "fe27d5105dd6"
+   },
+   {
+    "id": "<VI1PR06MB43494076E3092E7B5BA43AD4CA8C2@VI1PR06MB4349.eurprd06.prod.outlook.com>",
+    "tijd": "17:38",
+    "klant": "Touch",
+    "profiel": "Rick van Hoorn",
+    "nummer": "652",
+    "status": "telt",
+    "onderwerp": "513fce42c08b"
+   },
+   {
+    "id": "<VI1PR06MB434953DF62D0AEDF409AF965CA8C2@VI1PR06MB4349.eurprd06.prod.outlook.com>",
+    "tijd": "17:38",
+    "klant": "Touch",
+    "profiel": "Rick van Hoorn",
+    "nummer": "698",
+    "status": "telt",
+    "onderwerp": "125d4ca4b9bd"
+   },
+   {
+    "id": "<VI1PR06MB434960B805B58A00F8F0B83ACA8C2@VI1PR06MB4349.eurprd06.prod.outlook.com>",
+    "tijd": "17:38",
+    "klant": "Touch",
+    "profiel": "Rick van Hoorn",
+    "nummer": "682",
+    "status": "telt",
+    "onderwerp": "53ee0dbbf294"
+   },
+   {
+    "id": "<VI1PR06MB4349149D92CA8EE0D5671472CA8C2@VI1PR06MB4349.eurprd06.prod.outlook.com>",
+    "tijd": "17:40",
+    "klant": "Touch",
+    "profiel": "Toon van Gastel",
+    "nummer": "1174",
+    "status": "telt",
+    "onderwerp": "5731b533df14"
+   },
+   {
+    "id": "<VI1PR06MB43498C139919EEAF54047ABBCA8C2@VI1PR06MB4349.eurprd06.prod.outlook.com>",
+    "tijd": "17:40",
+    "klant": "Touch",
+    "profiel": "Toon van Gastel",
+    "nummer": "1231",
+    "status": "telt",
+    "onderwerp": "5a526633b9b1"
    }
   ],
   "2026-09-30": [
@@ -10497,5 +10560,5 @@
    }
   ]
  },
- "laatsteRun": "2026-10-29T15:32"
+ "laatsteRun": "2026-10-29T15:37"
 }
