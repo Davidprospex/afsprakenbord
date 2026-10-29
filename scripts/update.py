@@ -193,24 +193,38 @@ def main():
             gezien[a["onderwerp"]] = max(gezien.get(a["onderwerp"], a["datum"]), a["datum"])
     nieuw = 0
     telling = {"opgehaald": 0, "geen bevestiging": 0, "al op bord": 0, "zelfde ctpid": 0, "zelfde onderwerp": 0}
+    debug_klant = os.environ.get("DEBUG_KLANT", "lyreco").lower()
+    def dbg(msg, uitkomst, a=None):
+        subj = (msg.get("subject") or "").lower()
+        if debug_klant and debug_klant in subj:
+            text = body_text((msg.get("body") or {}).get("content", ""))
+            print("DEBUG", msg.get("receivedDateTime", "")[:16], "ctpid", field(text, "Ctpid") or "-",
+                  "| code:", (field(text, "Resultaatcode", "Resultcode") or "-")[:30], "| campagne:", field(text, "Campagne", "Campaign")[:30],
+                  "| onderwerp_start:", subj[:26], "| =>", uitkomst, (a or {}).get("datum", ""))
     for msg in fetch(since + "T00:00:00Z"):
         telling["opgehaald"] += 1
         a = parse(msg)
         if not a:
+            dbg(msg, "GEEN BEVESTIGING")
+        if not a:
             telling["geen bevestiging"] += 1
             continue
         if a["id"] in ids or a["datum"] < START:
+            dbg(msg, "AL OP BORD", a)
             telling["al op bord"] += 1
             continue
         vorig = sleutels.get((a["klant"], a["nummer"])) if a["nummer"] else None
         if vorig and abs((dt.date.fromisoformat(a["datum"]) - dt.date.fromisoformat(vorig)).days) <= 30:
+            dbg(msg, "ZELFDE CTPID (binnen 30 dagen)", a)
             telling["zelfde ctpid"] += 1
             continue  # zelfde Ctpid voor dezelfde klant: herplanning of dubbele mail
         vorige = gezien.get(a["onderwerp"])
         if vorige and (dt.date.fromisoformat(a["datum"]) - dt.date.fromisoformat(vorige)).days <= 14:
+            dbg(msg, "ZELFDE ONDERWERP (binnen 14 dagen)", a)
             telling["zelfde onderwerp"] += 1
             continue  # zelfde bevestiging opnieuw verstuurd
         gezien[a["onderwerp"]] = a["datum"]
+        dbg(msg, "TELT", a)
         dag = a.pop("datum")
         data["dagen"].setdefault(dag, []).append(a)
         ids.add(a["id"])
