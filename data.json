@@ -11700,7 +11700,39 @@
     "onderwerp": "ca824c97a2c5",
     "proj": "072a01b4"
    }
+  ],
+  "2026-10-30": [
+   {
+    "id": "<6b2aa1be-325e-47c7-acee-138768edcf49@prospex.nl>",
+    "tijd": "09:00",
+    "klant": "Lyreco",
+    "profiel": "Hamza Bouharrou",
+    "nummer": "488",
+    "status": "telt",
+    "onderwerp": "c15734109156",
+    "proj": "2a99646d"
+   },
+   {
+    "id": "<fe175879-5d50-4d8c-bcd7-1f96b7d2de8d@prospex.nl>",
+    "tijd": "10:05",
+    "klant": "Novar",
+    "profiel": "Jochem de Jong",
+    "nummer": "720",
+    "status": "telt",
+    "onderwerp": "bb93a0aa492a",
+    "proj": "38e9ff99"
+   },
+   {
+    "id": "<0100c48c-1133-44b6-8574-41f23f1868eb@prospex.nl>",
+    "tijd": "10:05",
+    "klant": "Prostrive",
+    "profiel": "Sven Hurks",
+    "nummer": "1074",
+    "status": "telt",
+    "onderwerp": "2d98de873377",
+    "proj": "20cdc994"
+   }
   ]
  },
- "laatsteRun": "2026-10-29T16:21"
+ "laatsteRun": "2026-10-30T11:09"
 }
